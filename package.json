@@ -1,0 +1,27 @@
+{
+  "name": "werestillopen",
+  "version": "1.0.0",
+  "description": "Site to describe which companies are still open during covid-19 and in what context",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stephaniemhutson/werestillopen.git"
+  },
+  "keywords": [
+    "COVID-19",
+    "local-businesses",
+    "coronavirus",
+    "small-business",
+    "business",
+    "local"
+  ],
+  "author": "Stephanie Hutson",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/stephaniemhutson/werestillopen/issues"
+  },
+  "homepage": "https://github.com/stephaniemhutson/werestillopen#readme"
+}
