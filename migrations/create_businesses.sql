@@ -1,0 +1,28 @@
+CREATE TABLE businesses (
+  business_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  name VARCHAR(255) NOT NULL,
+  is_flagged BOOLEAN DEFAULT FALSE NOT NULL,
+  is_open BOOLEAN DEFAULT FALSE NOT NULL,
+  take_out BOOLEAN DEFAULT FALSE NOT NULL,
+  delivery BOOLEAN DEFAULT FALSE NOT NULL,
+  online BOOLEAN DEFAULT FALSE NOT NULL,
+  details TEXT,
+  website VARCHAR(255),
+  phone_number CHAR(63),
+  created_ts TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  last_updated_ts TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  is_deleted BOOLEAN DEFAULT FALSE NOT NULL
+);
+
+CREATE TABLE addresses (
+  address_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  business_id BIGINT,
+  street_1 VARCHAR(511),
+  street_2 VARCHAR(511),
+  city VARCHAR(255),
+  state VARCHAR(16),
+  coordinate POINT NOT NULL,
+  is_deleted BOOLEAN DEFAULT FALSE NOT NULL,
+  SPATIAL INDEX `SPATIAL` (`coordinate`),
+  CONSTRAINT FOREIGN KEY `business_address_id` (`business_id`) REFERENCES businesses (business_id) ON DELETE CASCADE
+);
