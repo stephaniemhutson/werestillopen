@@ -24,13 +24,13 @@ class AddBusinessForm extends React.Component {
     event.preventDefault()
     axios.post(BASE_URL + '/businesses', {
       name: this.state.name,
-      isOpen: this.state.openStatus.includes("OPEN"),
-      takeout: this.state.openStatus.includes("TAKEOUT"),
+      is_open: this.state.openStatus.includes("OPEN"),
+      take_out: this.state.openStatus.includes("TAKEOUT"),
       online: this.state.openStatus.includes("ONLINE"),
       delivery: this.state.openStatus.includes("DELIVERY"),
       details: this.state.details,
       website: this.state.website,
-      phone: this.state.phone,
+      phone_number: this.state.phone,
     }).then(function(response) {console.log(response)})
     .catch(function (error) { console.log(error)})
   }
