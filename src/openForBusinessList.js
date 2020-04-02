@@ -1,5 +1,6 @@
 import React from 'react';
-import {BASE_URL} from './constants.js'
+import {BASE_URL} from './constants.js';
+import axios from 'axios';
 
 class OpenForBusinessList extends React.Component {
   constructor(props) {
@@ -30,6 +31,12 @@ class OpenForBusinessList extends React.Component {
     )
   }
 
+  onDelete(id) {
+    axios.delete(`${BASE_URL}businesses/${id}`)
+    .then(function(response) {console.log(response)})
+    .catch(function (error) { console.log(error)})
+  }
+
   render() {
     const {isLoaded, businesses, error} = this.state;
     if (!isLoaded) {
@@ -45,7 +52,9 @@ class OpenForBusinessList extends React.Component {
           online={business.online}
           takeout={business.takeout}
           delivery={business.delivery}
-          key={business.id}
+          business_id={business.business_id}
+          details={business.details}
+          onDelete={this.onDelete}
         />
       ) : <p>No Businesses in this area</p>}
     </div>
@@ -53,15 +62,19 @@ class OpenForBusinessList extends React.Component {
 }
 
 function Business(props) {
-  const {name, is_open, takeout, online, delivery} = props
+  const {name, is_open, takeout, online, delivery, details, onDelete, business_id} = props
+  // const _onDelete = onDelete.bind(this
+  console.log(business_id)
   return <div>
     <h3>{name}</h3>
+    <p>{details}</p>
     <ul>
       <li>Is Open: {is_open ? "Yes!" : "No"}</li>
       <li>Takeout: {takeout ? "Yes!" : "No"}</li>
       <li>Online: {online ? "Yes!" : "No"}</li>
       <li>Delivery: {delivery ? "Yes!" : "No"}</li>
     </ul>
+    <button onClick={() => onDelete(business_id)} >Delete</button>
   </div>;
 }
 
