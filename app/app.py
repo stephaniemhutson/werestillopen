@@ -40,3 +40,4 @@ def add_business():
 def delete_business(business_id):
     storage.delete(Business, {'business_id': business_id})
     return make_response()
+

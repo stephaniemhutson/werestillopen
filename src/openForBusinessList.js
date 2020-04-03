@@ -1,6 +1,9 @@
 import React from 'react';
 import {BASE_URL} from './constants.js';
 import axios from 'axios';
+import ConfirmModal from './confirmModal.js';
+import _ from 'lodash';
+
 
 class OpenForBusinessList extends React.Component {
   constructor(props) {
@@ -9,7 +12,10 @@ class OpenForBusinessList extends React.Component {
       isLoaded: false,
       error: null,
       businesses: [],
+      deleteModalId: null
     }
+    this.closeModal = this.closeModal.bind(this)
+    this.confirmDelete = this.confirmDelete.bind(this)
   }
 
   componentDidMount() {
@@ -33,12 +39,26 @@ class OpenForBusinessList extends React.Component {
 
   onDelete(id) {
     axios.delete(`${BASE_URL}businesses/${id}`)
-    .then(function(response) {console.log(response)})
+    .then(function(response) {
+      if (response.data.success) {
+        let businesses = this.state.businesses
+        _.remove(businesses, biz => biz.business_id !== id)
+      }
+    })
     .catch(function (error) { console.log(error)})
+    this.closeModal()
+  }
+
+  confirmDelete(id) {
+    this.setState({deleteModalId: id})
+  }
+
+  closeModal() {
+    this.setState({deleteModalId: null})
   }
 
   render() {
-    const {isLoaded, businesses, error} = this.state;
+    const {isLoaded, businesses, error, deleteModalId} = this.state;
     if (!isLoaded) {
       return <div>Loading...</div>
     }
@@ -46,6 +66,7 @@ class OpenForBusinessList extends React.Component {
       return <div>{error}</div>
     }
     return <div>
+      {deleteModalId !== null && <ConfirmModal onSumbit={() => this.onDelete(deleteModalId)} onCancel={this.closeModal}/>}
       {businesses.length ? businesses.map(
         business => <Business name={business.name}
           is_open={business.is_open}
@@ -54,7 +75,8 @@ class OpenForBusinessList extends React.Component {
           delivery={business.delivery}
           business_id={business.business_id}
           details={business.details}
-          onDelete={this.onDelete}
+          onDelete={this.confirmDelete}
+          key={businesses.business_id}
         />
       ) : <p>No Businesses in this area</p>}
     </div>
@@ -63,8 +85,6 @@ class OpenForBusinessList extends React.Component {
 
 function Business(props) {
   const {name, is_open, takeout, online, delivery, details, onDelete, business_id} = props
-  // const _onDelete = onDelete.bind(this
-  console.log(business_id)
   return <div>
     <h3>{name}</h3>
     <p>{details}</p>
