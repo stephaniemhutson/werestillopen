@@ -4,24 +4,46 @@ import './App.css';
 import {Link, Route, BrowserRouter as Router, Switch} from 'react-router-dom';
 import AddBusinessForm from './addBusinessForm.js';
 import OpenForBusinessList from './openForBusinessList.js';
+import Map from './map.js';
 
-function App() {
-  return (
-    <div className="App">
+class App extends React.Component {
+  render() {
+    return (
+      <div className="App">
+        <header>
+          <script src='https://api.mapbox.com/mapbox-gl-js/v1.9.0/mapbox-gl.js'></script>
+          <link href='https://api.mapbox.com/mapbox-gl-js/v1.9.0/mapbox-gl.css' rel='stylesheet' />
+        </header>
         <Router>
           <Route path="/"><Home /></Route>
         </Router>
-    </div>
-  );
+      </div>
+    );
+  }
 }
 
 export default App;
 
-function Home() {
-  return <div>
-    <h2>Open For Business:</h2>
-    <OpenForBusinessList />
-    <h2>Add your business and status</h2>
-    <AddBusinessForm />
-  </div>;
+class Home extends React.Component  {
+
+    constructor(props) {
+    super(props);
+    this.state = {
+      postalCode: 92104
+    };
+  }
+
+  updatePostalCode(code) {
+    this.setState({postalCode: code})
+  }
+
+  render() {
+    return <div>
+      <Map postalCode={this.state.postalCode} />
+      <h2>Open For Business:</h2>
+      <OpenForBusinessList />
+      <h2>Add your business and status</h2>
+      <AddBusinessForm />
+    </div>;
+  }
 }
