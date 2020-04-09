@@ -22,7 +22,6 @@ class OpenForBusinessList extends React.Component {
     fetch(BASE_URL).then(res => res.json())
     .then(
       (result) => {
-        console.log(result)
         this.setState({
           isLoaded: true,
           businesses: result.businesses,

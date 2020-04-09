@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {BASE_URL, STATUSES} from './constants.js'
 import _ from 'lodash';
 import axios from 'axios';
@@ -63,7 +63,8 @@ class AddBusinessForm extends React.Component {
       <option value={values[0]}>{values[1]}</option>
     )
 
-    return <form onSubmit={this.handleSubmit}>
+    return <div>
+      <form onSubmit={this.handleSubmit}>
       <div>
         <label>Business Name:
           <input
@@ -121,6 +122,7 @@ class AddBusinessForm extends React.Component {
         <input type="submit" />
       </div>
     </form>
+    </div>
   }
 }
 

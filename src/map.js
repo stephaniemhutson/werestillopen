@@ -1,45 +1,85 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {MAPBOX_TOKEN} from './config.js';
-import mapboxgl from 'mapbox-gl';
+// import mapboxgl from 'mapbox-gl';
 // import {MapboxGeocoder} from 'mapbox-gl-geocoder';
 import axios from 'axios';
+import Geocoder from "react-map-gl-geocoder";
+import ReactMapGL, {MapController} from 'react-map-gl';
+import DeckGL, { GeoJsonLayer } from "deck.gl";
 
 const MAPBOX_BASE_URL = 'https://api.mapbox.com/geocoding/v5/mapbox.places/'
-var MapboxGeocoder = require('mapbox-gl-geocoder');
-// https://api.mapbox.com/geocoding/v5/mapbox.places/92104.json?access_token=pk.eyJ1Ijoic2VhcmNoLW1hY2hpbmUtdXNlci0xIiwiYSI6ImNrN2Y1Nmp4YjB3aG4zZ253YnJoY21kbzkifQ.JM5ZeqwEEm-Tonrk5wOOMw
 
 class Map extends React.Component {
+
   constructor(props) {
     super(props)
     this.state = {
-      // location of San Diego
-      lng: -117,
-      lat: 32.7157,
-      zoom: 10,
-    };
-
+      viewport: {
+        latitude: 32.7157,
+        longitude: -117.1476,
+        width: "100%",
+        height: "100%",
+        zoom: 10
+      },
+      searchResultLayer: null
+    }
   }
 
-  componentDidMount() {
-    const map = new mapboxgl.Map({
-      container: this.mapContainer,
-      style: 'mapbox://styles/mapbox/streets-v11',
-      center: [this.state.lng, this.state.lat],
-      zoom: this.state.zoom
+  mapRef = React.createRef();
+
+  handleGeocoderViewportChange = viewport => {
+    const geocoderDefaultOverrides = { transitionDuration: 1000 };
+
+    return this.handleViewportChange({
+      ...viewport,
+      ...geocoderDefaultOverrides
     });
-    var geocoder = new MapboxGeocoder({
-      accessToken: mapboxgl.accessToken,
-      mapboxgl: mapboxgl,
-      // container: this.geocoderContainer
+  };
+
+  handleViewportChange = viewport => {
+    this.setState({
+      viewport: { ...this.state.viewport, ...viewport }
     });
-    map.addControl(geocoder)
-  }
+  };
+
+  handleOnResult = event => {
+    console.log(event.result);
+    this.setState({
+      searchResultLayer: new GeoJsonLayer({
+        id: "search-result",
+        data: event.result.geometry,
+        getFillColor: [255, 0, 0, 128],
+        getRadius: 1000,
+        pointRadiusMinPixels: 10,
+        pointRadiusMaxPixels: 10
+      })
+    });
+  };
 
   render() {
-
-    return <div>
-      <div className="mapContainer" ref={el => this.mapContainer = el} />
-    </div>
+    const {viewport, searchResultLayer} = this.state
+    return <div className="mapContainer">
+        <ReactMapGL
+          {...viewport}
+          ref={this.mapRef}
+          mapboxApiAccessToken={MAPBOX_TOKEN}
+          onViewportChange={this.handleViewportChange}
+          controller={new MapController()}
+          onClick={e => {
+            e.preventDefault()
+            console.log("click!")
+          }}
+        >
+          <Geocoder
+            mapRef={this.mapRef}
+            onResult={this.handleOnResult}
+            onViewportChange={this.handleGeocoderViewportChange}
+            mapboxApiAccessToken={MAPBOX_TOKEN}
+            position="top-left"
+          />
+          <DeckGL {...viewport} layers={[searchResultLayer]} />
+        </ReactMapGL>
+      </div>;
   }
 }
 

@@ -23,6 +23,11 @@ code {
   height: 25em;
 }
 
+.add-business-map {
+  height: 25em;
+  width: 25em;
+}
+
 /* Mapbox GeoCoder */
 
 /* Basics */

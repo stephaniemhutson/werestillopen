@@ -9,6 +9,11 @@ import {MAPBOX_TOKEN} from './config.js';
 import mapboxgl from 'mapbox-gl';
 
 class App extends React.Component {
+  constructor(props) {
+    super(props);
+    mapboxgl.accessToken = MAPBOX_TOKEN;
+  }
+
   render() {
     return (
       <div className="App">
@@ -18,6 +23,7 @@ class App extends React.Component {
         </header>
         <Router>
           <Route path="/"><Home /></Route>
+          <Route path="/add_business"><NewBusiness /></Route>
         </Router>
       </div>
     );
@@ -27,18 +33,21 @@ class App extends React.Component {
 export default App;
 
 class Home extends React.Component  {
-    constructor(props) {
-    super(props);
-    mapboxgl.accessToken = MAPBOX_TOKEN;
-  }
-
   render() {
     return <div>
       <Map />
       <h2>Open For Business:</h2>
       <OpenForBusinessList />
+      <Link to='/add_business'>Add your Business</Link>
+    </div>;
+  }
+}
+
+class NewBusiness extends React.Component {
+  render() {
+    return <div>
       <h2>Add your business and status</h2>
       <AddBusinessForm />
-    </div>;
+    </div>
   }
 }
