@@ -14,15 +14,18 @@ CREATE TABLE businesses (
   is_deleted BOOLEAN DEFAULT FALSE NOT NULL
 );
 
-CREATE TABLE addresses (
-  address_id BIGINT PRIMARY KEY AUTO_INCREMENT,
-  business_id BIGINT,
-  street_1 VARCHAR(511),
+CREATE TABLE locations (
+  location_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  business_id BIGINT NOT NULL,
+  longitude FLOAT NOT NULL,
+  latitude FLOAT NOT NULL,
+  mapbox_id VARCHAR(255),
+  street_address VARCHAR(511),
   street_2 VARCHAR(511),
   city VARCHAR(255),
   state VARCHAR(16),
-  coordinate POINT NOT NULL,
+  country VARCHAR(16),
+  postal_code VARCHAR(16),
   is_deleted BOOLEAN DEFAULT FALSE NOT NULL,
-  SPATIAL INDEX `SPATIAL` (`coordinate`),
   CONSTRAINT FOREIGN KEY `business_address_id` (`business_id`) REFERENCES businesses (business_id) ON DELETE CASCADE
 );

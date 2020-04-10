@@ -9,31 +9,13 @@ class OpenForBusinessList extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      isLoaded: false,
+      // isLoaded: false,
       error: null,
       businesses: [],
       deleteModalId: null
     }
     this.closeModal = this.closeModal.bind(this)
     this.confirmDelete = this.confirmDelete.bind(this)
-  }
-
-  componentDidMount() {
-    fetch(BASE_URL).then(res => res.json())
-    .then(
-      (result) => {
-        this.setState({
-          isLoaded: true,
-          businesses: result.businesses,
-        });
-      },
-      (error) => {
-        this.setState({
-          isLoaded: true,
-          error,
-        });
-      }
-    )
   }
 
   onDelete(id) {
@@ -57,8 +39,9 @@ class OpenForBusinessList extends React.Component {
   }
 
   render() {
-    const {isLoaded, businesses, error, deleteModalId} = this.state;
-    if (!isLoaded) {
+    const {error, deleteModalId} = this.state;
+    const businesses = this.props.businesses
+    if (!businesses) {
       return <div>Loading...</div>
     }
     if (error) {
@@ -70,7 +53,7 @@ class OpenForBusinessList extends React.Component {
         business => <Business name={business.name}
           is_open={business.is_open}
           online={business.online}
-          takeout={business.takeout}
+          takeout={business.take_out}
           delivery={business.delivery}
           business_id={business.business_id}
           details={business.details}

@@ -1,11 +1,9 @@
 import React, {useState} from 'react';
 import {MAPBOX_TOKEN} from './config.js';
-// import mapboxgl from 'mapbox-gl';
-// import {MapboxGeocoder} from 'mapbox-gl-geocoder';
-import axios from 'axios';
 import Geocoder from "react-map-gl-geocoder";
-import ReactMapGL, {MapController} from 'react-map-gl';
+import ReactMapGL, {Marker, Popup} from 'react-map-gl';
 import DeckGL, { GeoJsonLayer } from "deck.gl";
+import pin from './pin.svg'
 
 const MAPBOX_BASE_URL = 'https://api.mapbox.com/geocoding/v5/mapbox.places/'
 
@@ -21,7 +19,8 @@ class Map extends React.Component {
         height: "100%",
         zoom: 10
       },
-      searchResultLayer: null
+      searchResultLayer: null,
+      selectedBusiness: null
     }
   }
 
@@ -43,7 +42,7 @@ class Map extends React.Component {
   };
 
   handleOnResult = event => {
-    console.log(event.result);
+    this.props.onResult(event.result)
     this.setState({
       searchResultLayer: new GeoJsonLayer({
         id: "search-result",
@@ -57,17 +56,16 @@ class Map extends React.Component {
   };
 
   render() {
-    const {viewport, searchResultLayer} = this.state
+    const {viewport, searchResultLayer, selectedBusiness} = this.state
+    const businesses = this.props.businesses
     return <div className="mapContainer">
         <ReactMapGL
           {...viewport}
           ref={this.mapRef}
           mapboxApiAccessToken={MAPBOX_TOKEN}
           onViewportChange={this.handleViewportChange}
-          controller={new MapController()}
           onClick={e => {
             e.preventDefault()
-            console.log("click!")
           }}
         >
           <Geocoder
@@ -76,8 +74,28 @@ class Map extends React.Component {
             onViewportChange={this.handleGeocoderViewportChange}
             mapboxApiAccessToken={MAPBOX_TOKEN}
             position="top-left"
+            zoom={13}
+            countries="US"
+            limit={10}
           />
           <DeckGL {...viewport} layers={[searchResultLayer]} />
+          {businesses && businesses.map(business => <Marker
+            key={business.business_id}
+            latitude={business.location.latitude}
+            longitude={business.location.longitude}
+              >
+              <button
+                onClick={e => {
+                  e.preventDefault()
+                  this.setState({
+                    selectedBusiness: business
+                  })
+                }}
+                className="dark"><img className="pin" src={pin} alt="map pin" /></button>
+            </Marker>
+          )}
+          {selectedBusiness && <Popup latitude={selectedBusiness.location.latitude}
+            longitude={selectedBusiness.location.longitude}>{selectedBusiness.name}</Popup>}
         </ReactMapGL>
       </div>;
   }

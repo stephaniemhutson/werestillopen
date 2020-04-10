@@ -66,6 +66,17 @@ code {
   overflow: hidden;
 }
 
+button.dark {
+  /*color: white;*/
+  /*background-color: #555555;*/
+  background: transparent;
+  border: none;
+}
+
+img.pin {
+  width: 20px;
+}
+
 .mapboxgl-ctrl-geocoder--input::-ms-clear {
   display: none; /* hide input clear button in IE */
 }

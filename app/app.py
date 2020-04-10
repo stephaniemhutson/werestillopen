@@ -4,6 +4,7 @@ from flask import json, make_response, request
 from flask_cors import CORS
 from .store.sql import Storage
 from .store.businesses import Business
+from .store.locations import Location
 
 app = Flask(__name__)
 cors = CORS(app, resources={r"*": {"origins": r"http://localhost:3000/*"}})
@@ -15,29 +16,56 @@ app.config['MYSQL_DB'] = 'open_dev'
 
 
 # Connect to the database
-connection = pymysql.connect(host='localhost',
+def connect():
+    connection = pymysql.connect(host='localhost',
                              user='root',
                              password='',
                              db='open_dev',
                              charset='utf8mb4',
                              cursorclass=pymysql.cursors.DictCursor)
+    storage = Storage(connection)
+    return connection, storage
 
-storage = Storage(connection)
 
 @app.route('/')
 def index():
-    businesses_raw = storage.select(Business, where={"is_deleted": False})
-    return json.jsonify(businesses=businesses_raw)
+    connection, storage = connect()
+    businesses = storage.select(Business, where={"is_deleted": False})
+    businesses_by_id = {business['business_id']: business for business in businesses}
+    locations = storage.select(Location, where={"business_id": businesses_by_id.keys()})
+    results = []
+    for location in locations:
+        business = businesses_by_id[location['business_id']]
+        business['location'] = location
+        results.append(business)
+    connection.close()
+    return json.jsonify(businesses=results)
 
 @app.route('/businesses', methods=['POST'])
 def add_business():
+    connection, storage = connect()
     data = request.get_json()
-    storage.insert(Business, data)
-    connection.commit()
-    return make_response()
+    business_data = {row: column for row, column in data.items() if row in Business.ROWS}
+    location_data = {row: column for row, column in data.items() if row in Location.ROWS}
+    try:
+        business_id = storage.insert(Business, business_data)
+        location_data['business_id'] = business_id
+        location_id = storage.insert(Location, location_data)
+    except:
+        connection.rollback()
+        raise
+    else:
+        connection.commit()
+    new_business = storage.get(Business, business_id)
+    location = storage.get(Location, location_id)
+    new_business['location'] = location
+    connection.close()
+    return json.jsonify(new_business=new_business)
 
 @app.route('/businesses/<business_id>', methods=['DELETE', 'OPTIONS'])
 def delete_business(business_id):
+    connection, storage = connect()
     storage.delete(Business, {'business_id': business_id})
+    connection.commit()
+    connection.close()
     return make_response()
-

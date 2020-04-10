@@ -10,17 +10,20 @@ class AddBusinessForm extends React.Component {
     this.handleChange = this.handleChange.bind(this)
     this.handleMultiselect = this.handleMultiselect.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
-  }
 
-  state = {
-    name: null,
-    openStatus: [],
-    details: null,
-    website: null,
-    phone: null,
+    this.state = {
+      name: null,
+      openStatus: [],
+      details: null,
+      website: null,
+      phone: null,
+      address: null,
+      ...this.props.data
+    }
   }
 
   handleSubmit(event) {
+    const afterSave = this.props.afterSave
     event.preventDefault()
     axios.post(BASE_URL + '/businesses', {
       name: this.state.name,
@@ -31,7 +34,15 @@ class AddBusinessForm extends React.Component {
       details: this.state.details,
       website: this.state.website,
       phone_number: this.state.phone,
-    }).then(function(response) {console.log(response)})
+      longitude: this.props.data.longitude,
+      latitude: this.props.data.latitude,
+      postal_code: this.props.data.postalCode,
+      state: this.props.data.state,
+      city: this.props.data.city,
+      street_address: this.state.address,
+    }).then(function(response) {
+      afterSave(response.data.new_business)
+    })
     .catch(function (error) { console.log(error)})
   }
 
@@ -62,12 +73,12 @@ class AddBusinessForm extends React.Component {
     const statuses = STATUSES.map((values) =>
       <option value={values[0]}>{values[1]}</option>
     )
-
     return <div>
       <form onSubmit={this.handleSubmit}>
       <div>
         <label>Business Name:
           <input
+            required={true}
             name="name"
             type="text"
             value={this.state.name}
@@ -114,6 +125,17 @@ class AddBusinessForm extends React.Component {
             name="phone"
             type="text"
             value={this.state.phone}
+            onChange={this.handleChange}
+          />
+        </label>
+      </div>
+      <div>
+        <label>Street Address:
+          <input
+            required={true}
+            name="address"
+            type="text"
+            value={this.state.address}
             onChange={this.handleChange}
           />
         </label>

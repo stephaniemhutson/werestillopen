@@ -39,6 +39,8 @@ class Storage(object):
                 sql,
                 tuple(data.values())
             )
+            return cursor.lastrowid
+
 
     def select(self, model, where=None, include_deleted=False):
         table = model.TABLE
@@ -57,8 +59,11 @@ class Storage(object):
             return cursor.fetchall()
 
     def get(self, model, pk):
-        table = model.TABLE
-        values = self.select(table, where={model.PRIMARY_KEY: pk})
+        values = self.select(model, where={model.PRIMARY_KEY: pk})
+        if values:
+            return values[0]
+        else:
+            return None
 
     def delete(self, model, where):
         table = model.TABLE
