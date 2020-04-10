@@ -103,8 +103,13 @@ class Map extends React.Component {
                 className="dark"><img className="pin" src={pin} alt="map pin" /></button>
             </Marker>
           )}
-          {selectedBusiness && <Popup latitude={selectedBusiness.location.latitude}
-            longitude={selectedBusiness.location.longitude}>
+          {selectedBusiness && <Popup
+            latitude={selectedBusiness.location.latitude}
+            longitude={selectedBusiness.location.longitude}
+            onClose={() => {
+              this.setState({selectedBusiness: null})
+            }}
+          >
               <p><b>{selectedBusiness.name}</b></p>
               <p>{selectedBusiness.addess}</p>
               <p>Open: {selectedBusiness.is_open}</p>
