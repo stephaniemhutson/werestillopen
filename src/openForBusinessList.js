@@ -68,6 +68,7 @@ class OpenForBusinessList extends React.Component {
           details={business.details}
           onDelete={this.confirmDelete}
           key={businesses.business_id}
+          location={business.location}
         /> : null}</td>)}</tr>)
     }</table>
 
@@ -92,11 +93,11 @@ class OpenForBusinessList extends React.Component {
 }
 
 function Business(props) {
-  const {name, is_open, takeout, online, delivery, details, onDelete, address, business_id} = props
+  const {name, is_open, takeout, online, delivery, details, onDelete, location, business_id} = props
   return <div>
     <h3>{name}</h3>
     <p>{details}</p>
-    <p>{address}</p>
+    <p>{location.street_address}</p>
     <ul>
       <li>Is Open: {is_open ? "Yes!" : "No"}</li>
       <li>Takeout: {takeout ? "Yes!" : "No"}</li>

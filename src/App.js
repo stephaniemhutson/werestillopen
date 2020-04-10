@@ -79,7 +79,7 @@ class Home extends React.Component  {
             address: result.properties.address,
             postalCode: result.context[1].text,
             state: result.context[3].text,
-            city: result.context[2].text
+            city: result.context[2].text,
           }})
         }
       })

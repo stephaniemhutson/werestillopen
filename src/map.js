@@ -76,6 +76,7 @@ class Map extends React.Component {
           onClick={e => {
             e.preventDefault()
           }}
+          scrollZoom={false}
         >
           <Geocoder
             mapRef={this.mapRef}
@@ -111,7 +112,7 @@ class Map extends React.Component {
             }}
           >
               <p><b>{selectedBusiness.name}</b></p>
-              <p>{selectedBusiness.addess}</p>
+              <p>{selectedBusiness.address}</p>
               <p>Open: {selectedBusiness.is_open}</p>
               <p>Takeout: {selectedBusiness.take_out}</p>
               <p>Delivery: {selectedBusiness.delivery}</p>
