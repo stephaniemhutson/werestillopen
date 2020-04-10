@@ -37,7 +37,11 @@ class Home extends React.Component  {
 
   constructor(props) {
     super(props)
-    this.state = {data: null}
+    this.state = {
+      data: null,
+      selectedBusiness: null,
+      businesses: null,
+    }
     this.checkForBusiness = this.checkForBusiness.bind(this)
     this.afterSave = this.afterSave.bind(this)
   }
@@ -47,31 +51,37 @@ class Home extends React.Component  {
     .then(
       (result) => {
         this.setState({
-          isLoaded: true,
           businesses: result.businesses,
         });
       },
       (error) => {
         this.setState({
-          isLoaded: true,
           error,
         });
       }
     )
   }
 
-  checkForBusiness(result) {
+  async checkForBusiness(result) {
     if (result.place_type.includes("poi")) {
-      this.setState({data: {
-        mapboxId: result.id,
-        name: result.text,
-        longitude: result.geometry.coordinates[0],
-        latitude: result.geometry.coordinates[1],
-        address: result.properties.address,
-        postalCode: result.context[1].text,
-        state: result.context[3].text,
-        city: result.context[2].text
-      }})
+      await fetch(`${BASE_URL}/mapid/${result.id}`).then(res => res.json())
+      .then((res) => {
+        if (res.business) {
+          this.setState({selectedBusiness: res.business})
+        } else {
+          this.setState({data: {
+            mapboxId: result.id,
+            name: result.text,
+            longitude: result.geometry.coordinates[0],
+            latitude: result.geometry.coordinates[1],
+            address: result.properties.address,
+            postalCode: result.context[1].text,
+            state: result.context[3].text,
+            city: result.context[2].text
+          }})
+        }
+      })
+
     }
   }
 
@@ -86,7 +96,11 @@ class Home extends React.Component  {
 
   render() {
     return <div>
-      <Map onResult={this.checkForBusiness} businesses={this.state.businesses} />
+      <Map
+        onResult={this.checkForBusiness}
+        businesses={this.state.businesses}
+        selectedBusiness={this.state.selectedBusiness}
+      />
       <h2>Open For Business:</h2>
       <OpenForBusinessList businesses={this.state.businesses} />
       {this.state.data && <NewBusiness data={this.state.data} afterSave={this.afterSave} />}

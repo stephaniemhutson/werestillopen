@@ -69,3 +69,17 @@ def delete_business(business_id):
     connection.commit()
     connection.close()
     return make_response()
+
+@app.route('/mapid/<mapbox_id>', methods=['GET'])
+def get_by_mapbox_id(mapbox_id):
+    connection, storage = connect()
+    locations = storage.select(Location, {'mapbox_id': mapbox_id})
+    if not locations:
+        return json.jsonify(business=None)
+    # in theory there should be only one, but there is currently (4/10/2020) no
+    # uniqueness constraint on mapbox_id
+    location = locations[0]
+    business = storage.get(Business, location['business_id'])
+    business['location'] = location
+    return json.jsonify(business=business)
+

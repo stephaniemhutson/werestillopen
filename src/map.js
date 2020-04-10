@@ -20,7 +20,16 @@ class Map extends React.Component {
         zoom: 10
       },
       searchResultLayer: null,
-      selectedBusiness: null
+      selectedBusiness: this.props.selectedBusiness,
+    }
+  }
+
+  componentDidUpdate(nextProps) {
+    const { selectedBusiness } = this.props
+    if (nextProps.selectedBusiness !== selectedBusiness) {
+      if (selectedBusiness) {
+        this.setState({ selectedBusiness })
+      }
     }
   }
 
@@ -95,7 +104,13 @@ class Map extends React.Component {
             </Marker>
           )}
           {selectedBusiness && <Popup latitude={selectedBusiness.location.latitude}
-            longitude={selectedBusiness.location.longitude}>{selectedBusiness.name}</Popup>}
+            longitude={selectedBusiness.location.longitude}>
+              <p><b>{selectedBusiness.name}</b></p>
+              <p>{selectedBusiness.addess}</p>
+              <p>Open: {selectedBusiness.is_open}</p>
+              <p>Takeout: {selectedBusiness.take_out}</p>
+              <p>Delivery: {selectedBusiness.delivery}</p>
+            </Popup>}
         </ReactMapGL>
       </div>;
   }

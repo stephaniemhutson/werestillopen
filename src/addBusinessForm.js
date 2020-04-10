@@ -40,6 +40,7 @@ class AddBusinessForm extends React.Component {
       state: this.props.data.state,
       city: this.props.data.city,
       street_address: this.state.address,
+      mapbox_id: this.state.mapboxId,
     }).then(function(response) {
       afterSave(response.data.new_business)
     })

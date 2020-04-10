@@ -11,7 +11,7 @@ class Storage(object):
     def _construct_where_clause(self, where, data_tuple):
         clause = " WHERE "
         for column, value in where.items():
-            if isinstance(value, collections.Iterable):
+            if isinstance(value, collections.Iterable) and not isinstance(value, str):
                 clause += f'{column} IN (' + ','.join(['%s' for v in value]) + ') '
                 data_tuple = data_tuple + tuple(value)
             else:
