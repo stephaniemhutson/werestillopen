@@ -9,6 +9,7 @@ import {MAPBOX_TOKEN} from './config.js';
 import mapboxgl from 'mapbox-gl';
 import axios from 'axios';
 import {BASE_URL} from './constants.js';
+import _ from 'lodash';
 
 class App extends React.Component {
   constructor(props) {
@@ -44,6 +45,7 @@ class Home extends React.Component  {
     }
     this.checkForBusiness = this.checkForBusiness.bind(this)
     this.afterSave = this.afterSave.bind(this)
+    this.afterDelete = this.afterDelete.bind(this)
   }
 
   componentDidMount() {
@@ -90,8 +92,14 @@ class Home extends React.Component  {
     businesses.push(newBusiness);
     this.setState({
       data: null,
-      businesses: businesses
+      businesses,
     })
+  }
+
+  afterDelete(removedId) {
+    let businesses = [...this.state.businesses]
+    businesses = _.remove(businesses, biz => biz.business_id !== removedId)
+    this.setState({businesses})
   }
 
   render() {
@@ -102,7 +110,9 @@ class Home extends React.Component  {
         selectedBusiness={this.state.selectedBusiness}
       />
       <h2>Open For Business:</h2>
-      <OpenForBusinessList businesses={this.state.businesses} />
+      {this.state.businesses ? (
+        <OpenForBusinessList businesses={this.state.businesses} afterDelete={this.afterDelete} />
+        ) : (<div>Loading...</div>)}
       {this.state.data && <NewBusiness data={this.state.data} afterSave={this.afterSave} />}
     </div>;
   }

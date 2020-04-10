@@ -9,40 +9,45 @@ class OpenForBusinessList extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      // isLoaded: false,
       error: null,
-      businesses: [],
-      deleteModalId: null
+      // businesses: this.props.businesses,
+      deleteModalId: null,
+      deleteModalName: null,
+      isLoaded: true
     }
     this.closeModal = this.closeModal.bind(this)
     this.confirmDelete = this.confirmDelete.bind(this)
+    this.onDelete = this.onDelete.bind(this)
   }
 
   onDelete(id) {
+    const {afterDelete} = this.props
     axios.delete(`${BASE_URL}businesses/${id}`)
     .then(function(response) {
-      if (response.data.success) {
-        let businesses = this.state.businesses
-        _.remove(businesses, biz => biz.business_id !== id)
-      }
+      afterDelete(id)
     })
     .catch(function (error) { console.log(error)})
     this.closeModal()
   }
 
-  confirmDelete(id) {
-    this.setState({deleteModalId: id})
+  confirmDelete(id, name) {
+    this.setState({
+      deleteModalId: id,
+      deleteModalName: name
+    })
   }
 
   closeModal() {
-    this.setState({deleteModalId: null})
+    this.setState({deleteModalId: null, deleteModalName: null})
   }
 
   buildTable(businesses) {
+    if (!businesses.length) {
+      return  <p>No Businesses in this area</p>
+    }
     const rows = []
     let row = []
     businesses.map((business, i) =>{
-      console.log(i % 3)
       if (i % 3 === 0) {
         if (row.length) {
           rows.push(row)
@@ -51,8 +56,10 @@ class OpenForBusinessList extends React.Component {
       }
       row.push(business)
     })
+    rows.push(row)
+
     return <table className='businessList'>{
-      rows.map(row => <tr>{row.map(business => <td><Business name={business.name}
+      rows.map(row => <tr>{row.map(business => <td>{business ? <Business name={business.name}
           is_open={business.is_open}
           online={business.online}
           takeout={business.take_out}
@@ -61,39 +68,42 @@ class OpenForBusinessList extends React.Component {
           details={business.details}
           onDelete={this.confirmDelete}
           key={businesses.business_id}
-        /></td>)}</tr>)
+        /> : null}</td>)}</tr>)
     }</table>
 
   }
 
   render() {
-    const {error, deleteModalId} = this.state;
-    const businesses = this.props.businesses
-    if (!businesses) {
-      return <div>Loading...</div>
-    }
+    const {error, deleteModalId, deleteModalName} = this.state;
+
     if (error) {
       return <div>{error}</div>
     }
     return <div>
-      {deleteModalId !== null && <ConfirmModal onSumbit={() => this.onDelete(deleteModalId)} onCancel={this.closeModal}/>}
-      {businesses.length ? this.buildTable(businesses) : <p>No Businesses in this area</p>}
+      {deleteModalId !== null && (
+        <ConfirmModal
+          onSumbit={() => this.onDelete(deleteModalId)}
+          onCancel={this.closeModal}
+          message={`Are you sure you want to delete ${deleteModalName}?`}
+        />)}
+      {this.buildTable(this.props.businesses)}
     </div>
   }
 }
 
 function Business(props) {
-  const {name, is_open, takeout, online, delivery, details, onDelete, business_id} = props
+  const {name, is_open, takeout, online, delivery, details, onDelete, address, business_id} = props
   return <div>
     <h3>{name}</h3>
     <p>{details}</p>
+    <p>{address}</p>
     <ul>
       <li>Is Open: {is_open ? "Yes!" : "No"}</li>
       <li>Takeout: {takeout ? "Yes!" : "No"}</li>
       <li>Online: {online ? "Yes!" : "No"}</li>
       <li>Delivery: {delivery ? "Yes!" : "No"}</li>
     </ul>
-    <button onClick={() => onDelete(business_id)} >Delete</button>
+    <button onClick={() => onDelete(business_id, name)} >Delete</button>
   </div>;
 }
 

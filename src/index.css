@@ -29,6 +29,47 @@ code {
   width: 25em;
 }
 
+@media (max-width: 800px) {
+  table, thead, tbody, th, td, tr {
+    display: block;
+    margin: 0px auto;
+
+  }
+  table.businessList td {
+    width: 100%;
+  }
+}
+
+@media (min-width: 800px) {
+  Table.businessList {
+    width: 80%;
+    margin: 0px auto;
+  }
+
+  Table.businessList td {
+    text-align: center;
+    vertical-align: text-top;
+    width: 30%;
+  }
+}
+
+.modal {
+  background-color: white;
+  position: fixed;
+  padding-top: 1em;
+  padding-bottom: 1em;
+  left: 50%;
+  margin-left: -100px;
+  width:200px;
+  border-radius: 4px;
+  border: 2px solid #222222;
+}
+
+.modal button {
+  padding: .5em;
+  margin: .5em;
+  border-radius: 3px;
+}
 /* Mapbox GeoCoder */
 
 /* Basics */
@@ -68,24 +109,12 @@ code {
 }
 
 button.dark {
-  /*color: white;*/
-  /*background-color: #555555;*/
   background: transparent;
   border: none;
 }
 
 img.pin {
   width: 20px;
-}
-
-Table.businessList {
-  width: 80%;
-  margin: 0;
-}
-
-Table.businessList td {
-  text-align: center;
-  vertical-align: text-top;
 }
 
 .mapboxgl-ctrl-geocoder--input::-ms-clear {
