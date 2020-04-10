@@ -5,6 +5,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #efefef;
 }
 
 ul {
@@ -75,6 +76,16 @@ button.dark {
 
 img.pin {
   width: 20px;
+}
+
+Table.businessList {
+  width: 80%;
+  margin: 0;
+}
+
+Table.businessList td {
+  text-align: center;
+  vertical-align: text-top;
 }
 
 .mapboxgl-ctrl-geocoder--input::-ms-clear {

@@ -38,6 +38,34 @@ class OpenForBusinessList extends React.Component {
     this.setState({deleteModalId: null})
   }
 
+  buildTable(businesses) {
+    const rows = []
+    let row = []
+    businesses.map((business, i) =>{
+      console.log(i % 3)
+      if (i % 3 === 0) {
+        if (row.length) {
+          rows.push(row)
+        }
+        row = []
+      }
+      row.push(business)
+    })
+    return <table className='businessList'>{
+      rows.map(row => <tr>{row.map(business => <td><Business name={business.name}
+          is_open={business.is_open}
+          online={business.online}
+          takeout={business.take_out}
+          delivery={business.delivery}
+          business_id={business.business_id}
+          details={business.details}
+          onDelete={this.confirmDelete}
+          key={businesses.business_id}
+        /></td>)}</tr>)
+    }</table>
+
+  }
+
   render() {
     const {error, deleteModalId} = this.state;
     const businesses = this.props.businesses
@@ -49,18 +77,7 @@ class OpenForBusinessList extends React.Component {
     }
     return <div>
       {deleteModalId !== null && <ConfirmModal onSumbit={() => this.onDelete(deleteModalId)} onCancel={this.closeModal}/>}
-      {businesses.length ? businesses.map(
-        business => <Business name={business.name}
-          is_open={business.is_open}
-          online={business.online}
-          takeout={business.take_out}
-          delivery={business.delivery}
-          business_id={business.business_id}
-          details={business.details}
-          onDelete={this.confirmDelete}
-          key={businesses.business_id}
-        />
-      ) : <p>No Businesses in this area</p>}
+      {businesses.length ? this.buildTable(businesses) : <p>No Businesses in this area</p>}
     </div>
   }
 }
