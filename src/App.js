@@ -35,7 +35,6 @@ class App extends React.Component {
 export default App;
 
 class Home extends React.Component  {
-
   constructor(props) {
     super(props)
     this.state = {

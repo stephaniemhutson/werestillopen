@@ -24,6 +24,23 @@ class Map extends React.Component {
     }
   }
 
+  componentDidMount() {
+    if (!navigator.geolocation) {
+      return
+    }
+    navigator.geolocation.getCurrentPosition((position) => {
+      this.setState({
+        viewport: {
+          ...this.state.viewport,
+          longitude: position.coords.longitude,
+          latitude: position.coords.latitude,
+        }
+      })
+    }, (error) => {
+      console.log(error)
+    })
+  }
+
   componentDidUpdate(nextProps) {
     const { selectedBusiness } = this.props
     if (nextProps.selectedBusiness !== selectedBusiness) {
