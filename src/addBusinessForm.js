@@ -142,6 +142,39 @@ class AddBusinessForm extends React.Component {
         </label>
       </div>
       <div>
+        <label>City:
+          <input
+            required={true}
+            name="city"
+            type="text"
+            value={this.state.city}
+            onChange={this.handleChange}
+          />
+        </label>
+      </div>
+      <div>
+        <label>Postal Code:
+          <input
+            required={true}
+            name="postalCode"
+            type="text"
+            value={this.state.postalCode}
+            onChange={this.handleChange}
+          />
+        </label>
+      </div>
+      <div>
+        <label>State:
+          <input
+            required={true}
+            name="state"
+            type="text"
+            value={this.state.state}
+            onChange={this.handleChange}
+          />
+        </label>
+      </div>
+      <div>
         <input type="submit" />
       </div>
     </form>

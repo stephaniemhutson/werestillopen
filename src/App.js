@@ -71,15 +71,19 @@ class Home extends React.Component  {
         if (res.business) {
           this.setState({selectedBusiness: res.business})
         } else {
+          const postalCodes = result.context.filter(detail => detail.id.includes("postcode"))
+          const states = result.context.filter(detail => detail.id.includes("region"))
+          const cities = result.context.filter(detail => detail.id.includes("place"))
+
           this.setState({data: {
             mapboxId: result.id,
             name: result.text,
             longitude: result.geometry.coordinates[0],
             latitude: result.geometry.coordinates[1],
             address: result.properties.address,
-            postalCode: result.context[1].text,
-            state: result.context[3].text,
-            city: result.context[2].text,
+            postalCode: postalCodes.length ? postalCodes[0].text : null,
+            state: states.length ? states[0].text : null,
+            city: cities.length ? cities[0].text : null,
           }})
         }
       })
