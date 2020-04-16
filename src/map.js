@@ -87,6 +87,7 @@ class Map extends React.Component {
             zoom={13}
             countries="US"
             limit={10}
+            trackProximity={true}
           />
           <DeckGL {...viewport} layers={[searchResultLayer]} />
           {businesses && businesses.map(business => <Marker

@@ -5,22 +5,23 @@ from flask_cors import CORS
 from .store.sql import Storage
 from .store.businesses import Business
 from .store.locations import Location
+from . import config
 
 app = Flask(__name__)
-cors = CORS(app, resources={r"*": {"origins": r"http://localhost:3000/*"}})
+cors = CORS(app, resources={r"*": {"origins": config.ORIGINS}})
 
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = ''
-app.config['MYSQL_DB'] = 'open_dev'
+app.config['MYSQL_HOST'] = config.MYSQL_HOST
+app.config['MYSQL_USER'] = config.MYSQL_USER
+app.config['MYSQL_PASSWORD'] = config.MYSQL_PASSWORD
+app.config['MYSQL_DB'] = config.MYSQL_DB
 
 
 # Connect to the database
 def connect():
-    connection = pymysql.connect(host='localhost',
-                             user='root',
-                             password='',
-                             db='open_dev',
+    connection = pymysql.connect(host=config.MYSQL_HOST,
+                             user=config.MYSQL_USER,
+                             password=config.MYSQL_PASSWORD,
+                             db=config.MYSQL_DB,
                              charset='utf8mb4',
                              cursorclass=pymysql.cursors.DictCursor)
     storage = Storage(connection)
