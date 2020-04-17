@@ -4,6 +4,8 @@ import Geocoder from "react-map-gl-geocoder";
 import ReactMapGL, {Marker, Popup} from 'react-map-gl';
 import DeckGL, { GeoJsonLayer } from "deck.gl";
 import pin from './pin.svg'
+import AddBusinessForm from './addBusinessForm.js';
+import BusinessPopup from './BusinessPopup.js'
 
 const MAPBOX_BASE_URL = 'https://api.mapbox.com/geocoding/v5/mapbox.places/'
 
@@ -21,6 +23,7 @@ class Map extends React.Component {
       },
       searchResultLayer: null,
       selectedBusiness: this.props.selectedBusiness,
+      newBusiness: this.props.newBusiness,
     }
   }
 
@@ -42,10 +45,15 @@ class Map extends React.Component {
   }
 
   componentDidUpdate(nextProps) {
-    const { selectedBusiness } = this.props
+    const { selectedBusiness, newBusiness } = this.props
     if (nextProps.selectedBusiness !== selectedBusiness) {
       if (selectedBusiness) {
         this.setState({ selectedBusiness })
+      }
+    }
+    if (nextProps.newBusiness !== newBusiness) {
+      if (newBusiness) {
+        this.setState({ newBusiness })
       }
     }
   }
@@ -81,8 +89,16 @@ class Map extends React.Component {
     });
   };
 
+  saveBusiness = newBusiness => {
+    this.setState({
+      newBusiness: null,
+      selectedBusiness: newBusiness,
+    })
+    this.props.afterSave(newBusiness)
+  }
+
   render() {
-    const {viewport, searchResultLayer, selectedBusiness} = this.state
+    const {viewport, searchResultLayer, selectedBusiness, newBusiness} = this.state
     const businesses = this.props.businesses
     return <div className="mapContainer">
         <ReactMapGL
@@ -94,6 +110,7 @@ class Map extends React.Component {
             e.preventDefault()
           }}
           scrollZoom={false}
+          mapStyle='mapbox://styles/mapbox/streets-v11'
         >
           <Geocoder
             mapRef={this.mapRef}
@@ -111,6 +128,10 @@ class Map extends React.Component {
             key={business.business_id}
             latitude={business.location.latitude}
             longitude={business.location.longitude}
+            className="marker"
+            offsetTop={-30}
+            offsetLeft={-20}
+            onHover={() => this.setState({selectedBusiness: business})}
               >
               <button
                 onClick={e => {
@@ -122,18 +143,23 @@ class Map extends React.Component {
                 className="dark"><img className="pin" src={pin} alt="map pin" /></button>
             </Marker>
           )}
-          {selectedBusiness && <Popup
-            latitude={selectedBusiness.location.latitude}
-            longitude={selectedBusiness.location.longitude}
+          {selectedBusiness && <BusinessPopup
+              business={selectedBusiness}
+              onClose={() => {
+                this.setState({selectedBusiness: null})
+              }}
+            />}
+          {newBusiness && <Popup
+            latitude={newBusiness.latitude}
+            longitude={newBusiness.longitude}
+            className="popup"
+            closeOnClick={false}
+            offsetTop={-20}
             onClose={() => {
-              this.setState({selectedBusiness: null})
+              this.setState({newBusiness: null})
             }}
           >
-              <p><b>{selectedBusiness.name}</b></p>
-              <p>{selectedBusiness.address}</p>
-              <p>Open: {selectedBusiness.is_open}</p>
-              <p>Takeout: {selectedBusiness.take_out}</p>
-              <p>Delivery: {selectedBusiness.delivery}</p>
+              <AddBusinessForm data={this.props.newBusiness} afterSave={this.saveBusiness} onCancel={() => this.setState({newBusiness: null})}/>
             </Popup>}
         </ReactMapGL>
       </div>;

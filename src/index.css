@@ -24,6 +24,58 @@ code {
   height: 25em;
 }
 
+.business-popup {
+  width: 250px;
+}
+
+.container, .details {
+  margin: .2em;
+  border: 1px dotted #bbbbbb;
+  text-align: left;
+  padding-left: .25em;
+  padding-right: .25em;
+  background-color: white;
+}
+
+.container div {
+  padding: .1em;
+}
+
+.details div {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: .1em;
+}
+
+.popup button, .popup input[type=submit] {
+  margin-right: 2em;
+  margin-left: 2em;
+}
+
+.details div label {
+  order: 1;
+  flex: none;
+  padding-right: 1em;
+}
+.details input {
+  min-width: 50%;
+  order: 2;
+  flex-grow: 2;
+}
+
+.business-popup p {
+  margin-block-start: 0;
+  margin-block-end: .25em;
+}
+
+select.radio option {
+  appearance: radio;
+  -moz-appearance: radio;
+  -webkit-appearance: radio;
+}
+
 .add-business-map {
   height: 25em;
   width: 25em;
@@ -111,10 +163,18 @@ code {
 button.dark {
   background: transparent;
   border: none;
+  width: 40px;
+  /*margin-left: -20px*/
 }
 
 img.pin {
   width: 20px;
+}
+
+.navigator {
+  position: absolute;
+  right: .5em;
+  top: .5em;
 }
 
 .mapboxgl-ctrl-geocoder--input::-ms-clear {

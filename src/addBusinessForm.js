@@ -13,11 +13,17 @@ class AddBusinessForm extends React.Component {
 
     this.state = {
       name: null,
-      openStatus: [],
       details: null,
       website: null,
       phone: null,
       address: null,
+      // is_closed: null,
+      normal: null,
+      is_open: null,
+      online: null,
+      take_out: null,
+      delivery: null,
+      appointments: null,
       ...this.props.data
     }
   }
@@ -27,10 +33,11 @@ class AddBusinessForm extends React.Component {
     event.preventDefault()
     axios.post(BASE_URL + '/businesses', {
       name: this.state.name,
-      is_open: this.state.openStatus.includes("OPEN"),
-      take_out: this.state.openStatus.includes("TAKEOUT"),
-      online: this.state.openStatus.includes("ONLINE"),
-      delivery: this.state.openStatus.includes("DELIVERY"),
+      is_open: this.state.normal == 'true',
+      take_out: this.state.take_out == 'true',
+      online: this.state.online == 'true',
+      delivery: this.state.delivery == 'true',
+      appointments: this.state.appointments == 'true',
       details: this.state.details,
       website: this.state.website,
       phone_number: this.state.phone,
@@ -71,111 +78,145 @@ class AddBusinessForm extends React.Component {
   }
 
   render() {
-    const statuses = STATUSES.map((values) =>
-      <option value={values[0]}>{values[1]}</option>
-    )
+
     return <div>
       <form onSubmit={this.handleSubmit}>
-      <div>
-        <label>Business Name:
+      <div className="details">
+        <div>
+          <label>Business Name:
+          </label>
+            <input
+              required={true}
+              name="name"
+              type="text"
+              value={this.state.name}
+              onChange={this.handleChange}
+            />
+        </div>
+      </div>
+      <div className="container">
+        <div>
           <input
+            type="radio"
+            name="is_open"
+            value={true}
+            onChange={this.handleChange}
             required={true}
-            name="name"
-            type="text"
-            value={this.state.name}
-            onChange={this.handleChange}
           />
-        </label>
-      </div>
-      <div>
-        <label>Open status:
-          <select
-            name="openStatus"
-            multiple={true}
-            type="checkbox"
-            value={this.state.openStatus}
-            onChange={this.handleMultiselect}
-          >
-            {statuses}
-          </select>
-        </label>
-      </div>
-      <div>
-        <label>Details:
+          <label for="is_open">Our business is open in some capacity!</label>
+        <div>
+        </div>
           <input
-            name="details"
-            type="text"
-            value={this.state.details}
+            type="radio"
+            name="is_open"
+            value={false}
             onChange={this.handleChange}
           />
-        </label>
+          <label for="is_closed">Our business is closed until further notice.</label>
+        </div>
       </div>
-      <div>
-        <label>Website:
-          <input
-            name="website"
-            type="text"
-            value={this.state.website}
-            onChange={this.handleChange}
-          />
-        </label>
+      {this.state.is_open === "true" && <div className="container">
+        <div>
+          <input type="checkbox" value={this.state.take_out} name="take_out" onChange={this.handleChange} value={true}/>
+          <label for="take_out" >Take out?</label>
+        </div>
+        <div>
+          <input type="checkbox" value={this.state.delivery} name="delivery" onChange={this.handleChange} value={true}/>
+          <label for="delivery" >Delivery?</label>
+        </div>
+        <div>
+          <input type="checkbox" value={this.state.appointments} name="appointments" onChange={this.handleChange} value={true}/>
+          <label for="appointments" >By Appointment?</label>
+        </div>
+        <div>
+          <input type="checkbox" value={this.state.online} name="online" onChange={this.handleChange} value={true}/>
+          <label for="online" >Order online?</label>
+        </div>
+        <div>
+          <input type="checkbox" value={this.state.normal} name="normal" onChange={this.handleChange} value={true}/>
+          <label for="normal" >We're operating normally.</label>
+        </div>
       </div>
-      <div>
-        <label>Phone Number:
-          <input
-            name="phone"
-            type="text"
-            value={this.state.phone}
-            onChange={this.handleChange}
-          />
-        </label>
-      </div>
-      <div>
-        <label>Street Address:
-          <input
-            required={true}
-            name="address"
-            type="text"
-            value={this.state.address}
-            onChange={this.handleChange}
-          />
-        </label>
-      </div>
-      <div>
-        <label>City:
-          <input
-            required={true}
-            name="city"
-            type="text"
-            value={this.state.city}
-            onChange={this.handleChange}
-          />
-        </label>
-      </div>
-      <div>
-        <label>Postal Code:
-          <input
-            required={true}
-            name="postalCode"
-            type="text"
-            value={this.state.postalCode}
-            onChange={this.handleChange}
-          />
-        </label>
-      </div>
-      <div>
-        <label>State:
-          <input
-            required={true}
-            name="state"
-            type="text"
-            value={this.state.state}
-            onChange={this.handleChange}
-          />
-        </label>
+      }
+      <div className="details">
+        <div>
+          <label>Details:
+          </label>
+            <input
+              name="details"
+              type="text"
+              value={this.state.details}
+              onChange={this.handleChange}
+            />
+        </div>
+        <div>
+          <label>Website:
+          </label>
+            <input
+              name="website"
+              type="text"
+              value={this.state.website}
+              onChange={this.handleChange}
+            />
+        </div>
+        <div>
+          <label>Phone Number:
+          </label>
+            <input
+              name="phone"
+              type="text"
+              value={this.state.phone}
+              onChange={this.handleChange}
+            />
+        </div>
+        <div>
+          <label>Street Address:
+          </label>
+            <input
+              required={true}
+              name="address"
+              type="text"
+              value={this.state.address}
+              onChange={this.handleChange}
+            />
+        </div>
+        <div>
+          <label>City:
+          </label>
+            <input
+              required={true}
+              name="city"
+              type="text"
+              value={this.state.city}
+              onChange={this.handleChange}
+            />
+        </div>
+        <div>
+          <label>Postal Code:
+          </label>
+            <input
+              required={true}
+              name="postalCode"
+              type="text"
+              value={this.state.postalCode}
+              onChange={this.handleChange}
+            />
+        </div>
+        <div>
+          <label>State:
+          </label>
+            <input
+              required={true}
+              name="state"
+              type="text"
+              value={this.state.state}
+              onChange={this.handleChange}
+            />
+        </div>
       </div>
       <div>
         <input type="submit" />
+        <button onClick={this.props.onCancel} >Cancel</button>
       </div>
     </form>
     </div>

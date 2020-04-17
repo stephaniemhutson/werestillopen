@@ -74,16 +74,18 @@ class Home extends React.Component  {
           const states = result.context.filter(detail => detail.id.includes("region"))
           const cities = result.context.filter(detail => detail.id.includes("place"))
 
-          this.setState({data: {
-            mapboxId: result.id,
-            name: result.text,
-            longitude: result.geometry.coordinates[0],
-            latitude: result.geometry.coordinates[1],
-            address: result.properties.address,
-            postalCode: postalCodes.length ? postalCodes[0].text : null,
-            state: states.length ? states[0].text : null,
-            city: cities.length ? cities[0].text : null,
-          }})
+          this.setState({
+            data: {
+              mapboxId: result.id,
+              name: result.text,
+              longitude: result.geometry.coordinates[0],
+              latitude: result.geometry.coordinates[1],
+              address: result.properties.address,
+              postalCode: postalCodes.length ? postalCodes[0].text : null,
+              state: states.length ? states[0].text : null,
+              city: cities.length ? cities[0].text : null,
+            },
+          })
         }
       })
 
@@ -95,6 +97,7 @@ class Home extends React.Component  {
     businesses.push(newBusiness);
     this.setState({
       data: null,
+      selectedBusiness: newBusiness,
       businesses,
     })
   }
@@ -111,12 +114,14 @@ class Home extends React.Component  {
         onResult={this.checkForBusiness}
         businesses={this.state.businesses}
         selectedBusiness={this.state.selectedBusiness}
+        newBusiness={this.state.data}
+        afterSave={this.afterSave}
       />
       <h2>Open For Business:</h2>
       {this.state.businesses ? (
         <OpenForBusinessList businesses={this.state.businesses} afterDelete={this.afterDelete} />
         ) : (<div>Loading...</div>)}
-      {this.state.data && <NewBusiness data={this.state.data} afterSave={this.afterSave} />}
+
     </div>;
   }
 }

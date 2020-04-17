@@ -17,10 +17,9 @@ class OpenForBusinessList extends React.Component {
     }
     this.closeModal = this.closeModal.bind(this)
     this.confirmDelete = this.confirmDelete.bind(this)
-    this.onDelete = this.onDelete.bind(this)
   }
 
-  onDelete(id) {
+  onDelete = id => {
     const {afterDelete} = this.props
     axios.delete(`${BASE_URL}businesses/${id}`)
     .then(function(response) {
@@ -97,7 +96,9 @@ function Business(props) {
   return <div>
     <h3>{name}</h3>
     <p>{details}</p>
-    <p>{location.street_address}</p>
+    <p>
+      {location.street_address}<br/>{location.city}, {location.state}
+    </p>
     <ul>
       <li>Is Open: {is_open ? "Yes!" : "No"}</li>
       <li>Takeout: {takeout ? "Yes!" : "No"}</li>
