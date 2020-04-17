@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {BASE_URL, STATUSES} from './constants.js'
+import {BASE_URL, BUSINESS_TYPES} from './constants.js'
 import _ from 'lodash';
 import axios from 'axios';
 
@@ -17,14 +17,14 @@ class AddBusinessForm extends React.Component {
       website: null,
       phone: null,
       address: null,
-      // is_closed: null,
       normal: null,
       is_open: null,
       online: null,
       take_out: null,
       delivery: null,
       appointments: null,
-      ...this.props.data
+
+      ...props.data
     }
   }
 
@@ -37,7 +37,7 @@ class AddBusinessForm extends React.Component {
       take_out: this.state.take_out == 'true',
       online: this.state.online == 'true',
       delivery: this.state.delivery == 'true',
-      appointments: this.state.appointments == 'true',
+      by_appointment: this.state.appointments == 'true',
       details: this.state.details,
       website: this.state.website,
       phone_number: this.state.phone,
@@ -48,8 +48,9 @@ class AddBusinessForm extends React.Component {
       city: this.props.data.city,
       street_address: this.state.address,
       mapbox_id: this.state.mapboxId,
+      business_type: this.state.businessType,
     }).then(function(response) {
-      afterSave(response.data.new_business)
+      afterSave(response.data.business)
     })
     .catch(function (error) { console.log(error)})
   }
@@ -93,6 +94,21 @@ class AddBusinessForm extends React.Component {
               onChange={this.handleChange}
             />
         </div>
+        <div>
+          <label>Type of Business:
+          </label>
+          <select
+            required={true}
+            name="businessType"
+            type="text"
+            value={this.state.businessType}
+            onChange={this.handleChange}
+          >
+            {BUSINESS_TYPES.map(type => {
+              return <option value={type}>{type}</option>
+            })}
+          </select>
+        </div>
       </div>
       <div className="container">
         <div>
@@ -100,6 +116,7 @@ class AddBusinessForm extends React.Component {
             type="radio"
             name="is_open"
             value={true}
+            checked={this.state.is_open === "true"}
             onChange={this.handleChange}
             required={true}
           />
@@ -109,6 +126,7 @@ class AddBusinessForm extends React.Component {
           <input
             type="radio"
             name="is_open"
+            checked={this.state.is_open === "false"}
             value={false}
             onChange={this.handleChange}
           />
@@ -117,23 +135,24 @@ class AddBusinessForm extends React.Component {
       </div>
       {this.state.is_open === "true" && <div className="container">
         <div>
-          <input type="checkbox" value={this.state.take_out} name="take_out" onChange={this.handleChange} value={true}/>
+          <input type="checkbox" checked={this.state.take_out === "true"} value={true} name="take_out" onChange={this.handleChange}/>
           <label for="take_out" >Take out?</label>
         </div>
         <div>
-          <input type="checkbox" value={this.state.delivery} name="delivery" onChange={this.handleChange} value={true}/>
+          <input type="checkbox"
+          checked={this.state.delivery === "true"} value={true} name="delivery" onChange={this.handleChange}/>
           <label for="delivery" >Delivery?</label>
         </div>
         <div>
-          <input type="checkbox" value={this.state.appointments} name="appointments" onChange={this.handleChange} value={true}/>
+          <input type="checkbox" checked={this.state.appointments === "true"} value={true} name="appointments" onChange={this.handleChange}/>
           <label for="appointments" >By Appointment?</label>
         </div>
         <div>
-          <input type="checkbox" value={this.state.online} name="online" onChange={this.handleChange} value={true}/>
+          <input type="checkbox" checked={this.state.online === "true"} value={true} name="online" onChange={this.handleChange}/>
           <label for="online" >Order online?</label>
         </div>
         <div>
-          <input type="checkbox" value={this.state.normal} name="normal" onChange={this.handleChange} value={true}/>
+          <input type="checkbox" checked={this.state.normal === "true"} value={true} name="normal" onChange={this.handleChange}/>
           <label for="normal" >We're operating normally.</label>
         </div>
       </div>

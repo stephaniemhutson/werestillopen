@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {BASE_URL} from './constants.js';
 import axios from 'axios';
 import ConfirmModal from './confirmModal.js';
@@ -13,7 +13,7 @@ class OpenForBusinessList extends React.Component {
       // businesses: this.props.businesses,
       deleteModalId: null,
       deleteModalName: null,
-      isLoaded: true
+      isLoaded: true,
     }
     this.closeModal = this.closeModal.bind(this)
     this.confirmDelete = this.confirmDelete.bind(this)
@@ -63,6 +63,7 @@ class OpenForBusinessList extends React.Component {
           online={business.online}
           takeout={business.take_out}
           delivery={business.delivery}
+          by_appointment={business.by_appointment}
           business_id={business.business_id}
           details={business.details}
           onDelete={this.confirmDelete}
@@ -87,25 +88,44 @@ class OpenForBusinessList extends React.Component {
           message={`Are you sure you want to delete ${deleteModalName}?`}
         />)}
       {this.buildTable(this.props.businesses)}
+      {this.props.allowLoadMore ? <button onClick={this.props.onLoadMore}>Load More Businesses</button> : <p>All done!</p>}
     </div>
   }
 }
 
 function Business(props) {
-  const {name, is_open, takeout, online, delivery, details, onDelete, location, business_id} = props
-  return <div>
+  const [showDetails, setShowDetails] = useState(false)
+
+  const {
+    name,
+    is_open,
+    takeout,
+    online,
+    delivery,
+    details,
+    byAppointment,
+    onDelete,
+    location,
+    businessId,
+    businessType,
+  } = props
+  return <div className="business">
     <h3>{name}</h3>
-    <p>{details}</p>
     <p>
       {location.street_address}<br/>{location.city}, {location.state}
     </p>
-    <ul>
-      <li>Is Open: {is_open ? "Yes!" : "No"}</li>
-      <li>Takeout: {takeout ? "Yes!" : "No"}</li>
-      <li>Online: {online ? "Yes!" : "No"}</li>
-      <li>Delivery: {delivery ? "Yes!" : "No"}</li>
-    </ul>
-    <button onClick={() => onDelete(business_id, name)} >Delete</button>
+    <button onClick={() => setShowDetails(!showDetails)}>{showDetails ? "Hide Details" : "Show Details"}</button>
+    {showDetails ? <div>
+      {businessType ? <p>[{businessType}]</p> : null }
+      <p>Details: {details}</p>
+      <ul>
+        <li>Is Open: {is_open ? "Yes!" : "No"}</li>
+        <li>Takeout: {takeout ? "Yes!" : "No"}</li>
+        <li>Online: {online ? "Yes!" : "No"}</li>
+        <li>Delivery: {delivery ? "Yes!" : "No"}</li>
+        <li>Appointments: {byAppointment ? "Yes!": "No"}</li>
+      </ul>
+    </div> : null}
   </div>;
 }
 

@@ -4,6 +4,7 @@ import Geocoder from "react-map-gl-geocoder";
 import ReactMapGL, {Marker, Popup} from 'react-map-gl';
 import DeckGL, { GeoJsonLayer } from "deck.gl";
 import pin from './pin.svg'
+import closedpin from './closedpin.svg'
 import AddBusinessForm from './addBusinessForm.js';
 import BusinessPopup from './BusinessPopup.js'
 
@@ -19,11 +20,12 @@ class Map extends React.Component {
         longitude: -117.1476,
         width: "100%",
         height: "100%",
-        zoom: 10
+        zoom: 13
       },
       searchResultLayer: null,
       selectedBusiness: this.props.selectedBusiness,
       newBusiness: this.props.newBusiness,
+      editingBusiness: null,
     }
   }
 
@@ -89,17 +91,35 @@ class Map extends React.Component {
     });
   };
 
-  saveBusiness = newBusiness => {
+  saveBusiness = business => {
     this.setState({
       newBusiness: null,
-      selectedBusiness: newBusiness,
+      editingBusiness: null,
+      // selectedBusiness: business,
     })
-    this.props.afterSave(newBusiness)
+    if (business.business_id) {
+      // editing
+      this.props.afterUpdate(business)
+    } else {
+      // saving new
+      this.props.afterSave(business)
+    }
   }
 
   render() {
-    const {viewport, searchResultLayer, selectedBusiness, newBusiness} = this.state
+    const {viewport, searchResultLayer, selectedBusiness, newBusiness, editingBusiness} = this.state
     const businesses = this.props.businesses
+
+    function businessIsOpenAtAll(business) {
+      return (
+        business.is_open ||
+        business.online ||
+        business.delivery ||
+        business.take_out ||
+        business.by_appointment
+      )
+    }
+
     return <div className="mapContainer">
         <ReactMapGL
           {...viewport}
@@ -131,7 +151,6 @@ class Map extends React.Component {
             className="marker"
             offsetTop={-30}
             offsetLeft={-20}
-            onHover={() => this.setState({selectedBusiness: business})}
               >
               <button
                 onClick={e => {
@@ -140,7 +159,13 @@ class Map extends React.Component {
                     selectedBusiness: business
                   })
                 }}
-                className="dark"><img className="pin" src={pin} alt="map pin" /></button>
+                className="dark">
+                <img
+                  className="pin"
+                  src={businessIsOpenAtAll(business) ? pin : closedpin}
+                  alt="map pin"
+                />
+              </button>
             </Marker>
           )}
           {selectedBusiness && <BusinessPopup
@@ -148,7 +173,39 @@ class Map extends React.Component {
               onClose={() => {
                 this.setState({selectedBusiness: null})
               }}
-            />}
+              onEdit={() => this.setState({
+                editingBusiness: selectedBusiness,
+                selectedBusiness: null,
+              }
+            )}/>}
+          {editingBusiness && <Popup
+            latitude={editingBusiness.location.latitude}
+            longitude={editingBusiness.location.longitude}
+            className="popup"
+            closeOnClick={false}
+            offsetTop={-20}
+            onClose={() => {
+              this.setState({editingBusiness: null})
+            }}
+          >
+              <AddBusinessForm data={
+                {
+                  ...editingBusiness,
+                  ...editingBusiness.location,
+                  postalCode: editingBusiness.location.postal_code,
+                  address: editingBusiness.location.street_address,
+                  businessType: editingBusiness.business_type,
+                  is_open: businessIsOpenAtAll(editingBusiness) ? "true" : "false",
+                  appointments: editingBusiness.by_appointment ? "true" : null,
+                  take_out: editingBusiness.take_out ? "true" : null,
+                  delivery: editingBusiness.delivery ? "true" : null,
+                  online: editingBusiness.online ? "true" : null,
+                  normal: editingBusiness.is_open ? "true" : null,
+                }}
+                afterSave={this.saveBusiness}
+                onCancel={() => this.setState({newBusiness: null})}
+              />
+            </Popup>}
           {newBusiness && <Popup
             latitude={newBusiness.latitude}
             longitude={newBusiness.longitude}

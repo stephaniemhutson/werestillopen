@@ -30,8 +30,23 @@ def connect():
 
 @app.route('/')
 def index():
+    data = request.args
+    where = {"is_deleted": False}
+    kwargs = {}
+    if data.get('page'):
+        kwargs['offset'] = config.PAGE_LIMIT * (int(data['page']) - 1)
+
+    if data.get('business_type'):
+        where['business_type'] = data['business_type']
+
     connection, storage = connect()
-    businesses = storage.select(Business, where={"is_deleted": False})
+    businesses = storage.select(
+        Business,
+        where=where,
+        limit=config.PAGE_LIMIT,
+        **kwargs)
+    if not businesses:
+        return json.jsonify(businesses=[])
     businesses_by_id = {business['business_id']: business for business in businesses}
     locations = storage.select(Location, where={"business_id": businesses_by_id.keys()})
     results = []
@@ -61,15 +76,42 @@ def add_business():
     location = storage.get(Location, location_id)
     new_business['location'] = location
     connection.close()
-    return json.jsonify(new_business=new_business)
+    return json.jsonify(business=new_business)
 
-@app.route('/businesses/<business_id>', methods=['DELETE', 'OPTIONS'])
-def delete_business(business_id):
-    connection, storage = connect()
-    storage.delete(Business, {'business_id': business_id})
-    connection.commit()
-    connection.close()
-    return make_response()
+@app.route('/businesses/<business_id>', methods=['DELETE', 'PUT', 'OPTIONS'])
+def alter_business(business_id):
+    if request.method == 'DELETE':
+        connection, storage = connect()
+        storage.delete(Business, {'business_id': business_id})
+        connection.commit()
+        connection.close()
+        return make_response()
+    elif request.method == 'PUT':
+        connection, storage = connect()
+        data = request.get_json()
+        business_data = {row: column for row, column in data.items() if row in Business.ROWS}
+        location_data = {row: column for row, column in data.items() if row in Location.ROWS}
+
+        try:
+            if business_data:
+                business = storage.update(Business, business_id, business_data)
+            else:
+                business = storage.get(Business, business_id)
+            if location_data:
+                location = storage.update_where(Location, {'business_id': business_id}, location_data)
+            else:
+                locations = storage.select(Location, {'business_id': business_id})
+                location = location[0] if locations else None
+        except:
+            connection.rollback()
+            raise
+        else:
+            connection.commit()
+        connection.commit()
+        connection.close()
+
+        business['location'] = location
+        return json.jsonify(business=business)
 
 @app.route('/mapid/<mapbox_id>', methods=['GET'])
 def get_by_mapbox_id(mapbox_id):

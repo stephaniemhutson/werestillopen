@@ -25,7 +25,8 @@ code {
 }
 
 .business-popup {
-  width: 250px;
+  min-width: 250px;
+  max-width: 350px;
 }
 
 .container, .details {
@@ -59,7 +60,7 @@ code {
   flex: none;
   padding-right: 1em;
 }
-.details input {
+.details input, .details select {
   min-width: 50%;
   order: 2;
   flex-grow: 2;
@@ -93,16 +94,34 @@ select.radio option {
 }
 
 @media (min-width: 800px) {
-  Table.businessList {
+  table.businessList {
     width: 80%;
     margin: 0px auto;
+    border: 2px solid #bbbbbb;
+    border-radius: 10px;
+    background-color: #cccccc;
   }
 
-  Table.businessList td {
-    text-align: center;
-    vertical-align: text-top;
+  table.businessList td {
     width: 30%;
   }
+}
+
+table.businessList td {
+  text-align: center;
+  vertical-align: text-top;
+}
+table.businessList {
+    border: 2px solid #bbbbbb;
+    border-radius: 10px;
+    background-color: #cccccc;
+}
+
+table.businessList td div.business {
+  border: 2px solid #bbbbbb;
+  border-radius: 8px;
+  background-color: #fafafa;
+  padding-bottom: 1em;
 }
 
 .modal {
@@ -164,7 +183,6 @@ button.dark {
   background: transparent;
   border: none;
   width: 40px;
-  /*margin-left: -20px*/
 }
 
 img.pin {

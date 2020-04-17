@@ -8,7 +8,7 @@ import Map from './map.js';
 import {MAPBOX_TOKEN} from './config.js';
 import mapboxgl from 'mapbox-gl';
 import axios from 'axios';
-import {BASE_URL} from './constants.js';
+import {BASE_URL, BUSINESS_TYPES} from './constants.js';
 import _ from 'lodash';
 
 class App extends React.Component {
@@ -41,6 +41,8 @@ class Home extends React.Component  {
       data: null,
       selectedBusiness: null,
       businesses: null,
+      page: 1,
+      allowLoadMore: true,
     }
     this.checkForBusiness = this.checkForBusiness.bind(this)
     this.afterSave = this.afterSave.bind(this)
@@ -48,7 +50,11 @@ class Home extends React.Component  {
   }
 
   componentDidMount() {
-    fetch(BASE_URL).then(res => res.json())
+    this._getBusinesses(null)
+  }
+
+  _getBusinesses = (searchQuery) => {
+    fetch(`${BASE_URL}${searchQuery ? "?" + searchQuery : ""}`).then(res => res.json())
     .then(
       (result) => {
         this.setState({
@@ -102,10 +108,50 @@ class Home extends React.Component  {
     })
   }
 
+  afterUpdate = (updatedBusiness) => {
+    const businesses = []
+    this.state.businesses.map(business => {
+      if (business.business_id === updatedBusiness.business_id) {
+        businesses.push(updatedBusiness)
+      } else {
+        businesses.push(business)
+      }
+    })
+    this.setState({
+      data: null,
+      selectedBusiness: updatedBusiness,
+      businesses,
+    })
+  }
+
   afterDelete(removedId) {
     let businesses = [...this.state.businesses]
     businesses = _.remove(businesses, biz => biz.business_id !== removedId)
     this.setState({businesses})
+  }
+
+  loadMore = () => {
+    fetch(`${BASE_URL}/?page=${this.state.page + 1}`).then(res => res.json())
+    .then(
+      (result) => {
+        if (result.businesses.length === 0) {
+          this.setState({
+            allowLoadMore: false,
+          })
+        }
+        let businesses = [...this.state.businesses]
+        businesses = businesses.concat(result.businesses)
+        this.setState({
+          businesses,
+          page: this.state.page + 1
+        });
+      },
+      (error) => {
+        this.setState({
+          error,
+        });
+      }
+    )
   }
 
   render() {
@@ -116,12 +162,34 @@ class Home extends React.Component  {
         selectedBusiness={this.state.selectedBusiness}
         newBusiness={this.state.data}
         afterSave={this.afterSave}
+        afterUpdate={this.afterUpdate}
       />
-      <h2>Open For Business:</h2>
+      <h1>Open For Business:</h1>
+      <div>
+        <label for="business_type">Select a Type of Business to Narrow it down</label>
+        <select
+          name="business_type"
+          onChange={(e) => {
+            e.preventDefault();
+            if (e.target.value) {
+              this._getBusinesses(`business_type=${e.target.value}`)
+            } else {
+              this._getBusinesses(null)
+            }}}
+          >
+          <option value="" defaultSelected={true}>Any</option>
+          {BUSINESS_TYPES.map(type => {
+            return <option value={type}>{type}</option>
+          })}
+        </select>
+      </div>
       {this.state.businesses ? (
-        <OpenForBusinessList businesses={this.state.businesses} afterDelete={this.afterDelete} />
+        <OpenForBusinessList
+          businesses={this.state.businesses}
+          afterDelete={this.afterDelete}
+          onLoadMore={this.loadMore}
+          allowLoadMore={this.state.allowLoadMore} />
         ) : (<div>Loading...</div>)}
-
     </div>;
   }
 }

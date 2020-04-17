@@ -8,6 +8,8 @@ class Business(object):
         'is_open',
         'takeout',
         'delivery',
+        'by_appointment',
+        'business_type',
         'online',
         'details',
         'website',
@@ -18,3 +20,4 @@ class Business(object):
     ]
     PRIMARY_KEY = 'business_id'
     TABLE = 'businesses'
+    DEFAULT_ORDER = 'businesses.created_ts DESC'

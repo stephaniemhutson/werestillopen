@@ -1,0 +1,2 @@
+ALTER TABLE businesses
+ADD COLUMN business_type VARCHAR(256) DEFAULT NULL;

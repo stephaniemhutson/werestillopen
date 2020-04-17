@@ -16,3 +16,4 @@ class Location(object):
 
     PRIMARY_KEY = 'location_id'
     TABLE = 'locations'
+    DEFAULT_ORDER = None

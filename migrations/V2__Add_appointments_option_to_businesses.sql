@@ -1,0 +1,2 @@
+ALTER TABLE businesses
+ADD COLUMN by_appointment BOOLEAN DEFAULT FALSE NOT NULL;
