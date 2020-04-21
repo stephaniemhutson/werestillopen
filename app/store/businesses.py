@@ -6,7 +6,7 @@ class Business(object):
         'name',
         'is_flagged',
         'is_open',
-        'takeout',
+        'take_out',
         'delivery',
         'by_appointment',
         'business_type',

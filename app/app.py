@@ -33,13 +33,19 @@ def index():
     data = request.args
     where = {"is_deleted": False}
     kwargs = {}
+    locations = None
+    connection, storage = connect()
+
     if data.get('page'):
         kwargs['offset'] = config.PAGE_LIMIT * (int(data['page']) - 1)
 
     if data.get('business_type'):
         where['business_type'] = data['business_type']
 
-    connection, storage = connect()
+    if data.get('postal_code') or data.get('city') or \
+            (data.get('lat') and data.get('long') and data.get('zoom')):
+        locations = locations_first(storage, data)
+
     businesses = storage.select(
         Business,
         where=where,
@@ -48,7 +54,15 @@ def index():
     if not businesses:
         return json.jsonify(businesses=[])
     businesses_by_id = {business['business_id']: business for business in businesses}
-    locations = storage.select(Location, where={"business_id": businesses_by_id.keys()})
+    if locations is not None:
+        locations = [
+            location for location in locations
+            if location['business_id'] in businesses_by_id
+        ]
+    else:
+        locations = storage.select(
+            Location, where={"business_id": businesses_by_id.keys()}
+        )
     results = []
     for location in locations:
         business = businesses_by_id[location['business_id']]
@@ -56,6 +70,29 @@ def index():
         results.append(business)
     connection.close()
     return json.jsonify(businesses=results)
+
+def locations_first(storage, data):
+    where = {}
+    custom_where = None
+    if data.get('postal_code'):
+        where['postal_code'] = data['postal_code']
+    if data.get('city'):
+        where['city'] = data['city']
+
+    if data.get('lat') and data.get('long') and data.get('zoom'):
+        zoom = float(data['zoom'])
+        latlong_range = 1000.0 / 2 ** zoom
+        custom_where = (
+            f" latitude >= {data['lat']} - {latlong_range} AND "
+            f" latitude <= {data['lat']} + {latlong_range} AND "
+            f" longitude >= {data['long']} - {latlong_range} AND "
+            f" longitude >= {data['long']} - {latlong_range} "
+        )
+
+    return storage.select(
+        Location, where=where, custom_where=custom_where
+    )
+
 
 @app.route('/businesses', methods=['POST'])
 def add_business():
@@ -98,10 +135,9 @@ def alter_business(business_id):
             else:
                 business = storage.get(Business, business_id)
             if location_data:
-                location = storage.update_where(Location, {'business_id': business_id}, location_data)
-            else:
-                locations = storage.select(Location, {'business_id': business_id})
-                location = location[0] if locations else None
+                storage.update_where(Location, {'business_id': business_id}, location_data)
+            locations = storage.select(Location, {'business_id': business_id})
+            location = locations[0] if locations else None
         except:
             connection.rollback()
             raise
@@ -112,6 +148,8 @@ def alter_business(business_id):
 
         business['location'] = location
         return json.jsonify(business=business)
+    else:
+        return make_response()
 
 @app.route('/mapid/<mapbox_id>', methods=['GET'])
 def get_by_mapbox_id(mapbox_id):

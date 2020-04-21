@@ -128,7 +128,7 @@ class Storage(object):
                 first = False
                 values.append(value)
             data_tuple = tuple(values)
-            where_clause = self._construct_where_clause(where, None, data_tuple)
+            where_clause, data_tuple = self._construct_where_clause(where, None, data_tuple)
 
             sql = sql_base + where_clause
 
@@ -136,5 +136,3 @@ class Storage(object):
                 sql,
                 data_tuple
             )
-            return self.get(model, pk)
-
