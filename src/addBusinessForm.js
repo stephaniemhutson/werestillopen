@@ -30,11 +30,11 @@ class AddBusinessForm extends React.Component {
     event.preventDefault()
     const data = {
       name: this.state.name,
-      is_open: this.state.normal === 'true',
-      take_out: this.state.take_out === 'true',
-      online: this.state.online === 'true',
-      delivery: this.state.delivery === 'true',
-      by_appointment: this.state.appointments === 'true',
+      is_open: this.state.normal,
+      take_out: this.state.take_out,
+      online: this.state.online,
+      delivery: this.state.delivery,
+      by_appointment: this.state.appointments,
       details: this.state.details,
       website: this.state.website,
       phone_number: this.state.phone,
@@ -66,6 +66,13 @@ class AddBusinessForm extends React.Component {
     const target = event.target;
     this.setState({
       [target.name]: target.value
+    })
+  }
+
+  handleChecked = (event) => {
+    const target = event.target;
+    this.setState({
+      [target.name]: target.checked
     })
   }
 
@@ -128,38 +135,50 @@ class AddBusinessForm extends React.Component {
           <input
             name="take_out"
             type="checkbox"
-            checked={this.state.take_out === "true"}
+            checked={this.state.take_out}
             value={true}
-            onChange={this.handleChange}
+            onChange={this.handleChecked}
           />
           <label for="take_out" >Take out?</label>
         </div>
         <div>
           <input
             type="checkbox"
-            checked={this.state.delivery === "true"}
+            checked={this.state.delivery}
             value={true}
             name="delivery"
-            onChange={this.handleChange}
+            onChange={this.handleChecked}
           />
           <label for="delivery" >Delivery?</label>
         </div>
         <div>
           <input
             type="checkbox"
-            checked={this.state.appointments === "true"}
+            checked={this.state.appointments}
             value={true}
             name="appointments"
-            onChange={this.handleChange}
+            onChange={this.handleChecked}
           />
           <label for="appointments" >By Appointment?</label>
         </div>
         <div>
-          <input type="checkbox" checked={this.state.online === "true"} value={true} name="online" onChange={this.handleChange}/>
+          <input
+            type="checkbox"
+            checked={this.state.online}
+            value={true}
+            name="online"
+            onChange={this.handleChecked}
+            />
           <label for="online" >Order online?</label>
         </div>
         <div>
-          <input type="checkbox" checked={this.state.normal === "true"} value={true} name="normal" onChange={this.handleChange}/>
+          <input
+            type="checkbox"
+            checked={this.state.normal}
+            value={true}
+            name="normal"
+            onChange={this.handleChecked}
+          />
           <label for="normal" >We're operating normally.</label>
         </div>
       </div>

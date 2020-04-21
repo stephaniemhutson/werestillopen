@@ -200,11 +200,11 @@ class Map extends React.Component {
                   address: editingBusiness.location.street_address,
                   businessType: editingBusiness.business_type,
                   is_open: businessIsOpenAtAll(editingBusiness) ? "true" : "false",
-                  appointments: editingBusiness.by_appointment ? "true" : null,
-                  take_out: editingBusiness.take_out ? "true" : null,
-                  delivery: editingBusiness.delivery ? "true" : null,
-                  online: editingBusiness.online ? "true" : null,
-                  normal: editingBusiness.is_open ? "true" : null,
+                  appointments: editingBusiness.by_appointment,
+                  take_out: editingBusiness.take_out,
+                  delivery: editingBusiness.delivery,
+                  online: editingBusiness.online,
+                  normal: editingBusiness.is_open,
                 }}
                 afterSave={this.saveBusiness}
                 onCancel={() => this.setState({newBusiness: null})}
