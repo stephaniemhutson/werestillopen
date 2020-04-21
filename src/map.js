@@ -41,6 +41,9 @@ class Map extends React.Component {
           latitude: position.coords.latitude,
         }
       })
+      this.props.onViewportChange(
+        position.coords.latitude, position.coords.longitude, this.state.viewport.zoom
+      )
     }, (error) => {
       console.log(error)
     })
@@ -75,6 +78,7 @@ class Map extends React.Component {
     this.setState({
       viewport: { ...this.state.viewport, ...viewport }
     });
+    this.props.onViewportChange(viewport.latitude, viewport.longitude, viewport.zoom)
   };
 
   handleOnResult = event => {
@@ -95,7 +99,6 @@ class Map extends React.Component {
     this.setState({
       newBusiness: null,
       editingBusiness: null,
-      // selectedBusiness: business,
     })
     if (business.business_id) {
       // editing

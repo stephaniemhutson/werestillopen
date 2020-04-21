@@ -17,9 +17,9 @@ class Home extends React.Component  {
       businesses: null,
       page: 1,
       allowLoadMore: true,
-      zoom: 13,
-      longitude: 32.7157,
-      latitude: -117.1476,
+      latLongQuery: null,
+      businessType: null,
+      city: null,
     }
     this.checkForBusiness = this.checkForBusiness.bind(this)
     this.afterSave = this.afterSave.bind(this)
@@ -32,7 +32,13 @@ class Home extends React.Component  {
   }
 
   _getBusinesses = (searchQuery) => {
-    fetch(`${BASE_URL}${searchQuery ? "?" + searchQuery : ""}`).then(res => res.json())
+    let query = searchQuery
+    if (this.state.latLongQuery) {
+      query = searchQuery ? (
+        `${searchQuery}&${this.state.latLongQuery}`
+      ) : (`${this.state.latLongQuery}`);
+    }
+    fetch(`${BASE_URL}${query ? "?" + query : ""}`).then(res => res.json())
     .then(
       (result) => {
         this.setState({
@@ -109,9 +115,17 @@ class Home extends React.Component  {
   }
 
   loadMore = () => {
-    fetch(`${BASE_URL}/?page=${this.state.page + 1}&lat=${this.state.latitude}
-                 &long=${this.state.longitude}&zoom=${this.state.zoom}`
-            ).then(res => res.json())
+    let url = `${BASE_URL}/?page=${this.state.page + 1}`
+    if (this.state.latLongQuery) {
+      url = `${url}&${this.state.latLongQuery}`
+    }
+    if (this.state.businessType) {
+      url = `${url}&business_type=${this.state.businessType}`
+    }
+    if (this.state.city) {
+      url = `${url}&city=${this.state.city}`
+    }
+    fetch(url).then(res => res.json())
     .then(
       (result) => {
         if (result.businesses.length === 0) {
@@ -146,30 +160,31 @@ class Home extends React.Component  {
         afterUpdate={this.afterUpdate}
         onViewportChange={
           (latitude, longitude, zoom) => {
-            this._getBusinesses(`lat=${latitude}&long=${longitude}&zoom=${zoom}`)
             this.setState({
-              latitude: latitude,
-              longitude: longitude,
-              zoom: zoom,
+              latLongQuery: `lat=${latitude}&long=${longitude}&zoom=${zoom}`
+            }, () => {
+              this._getBusinesses(null)
             })
           }
         }
       />
       <div>
-        <label for="business_type">Select a Type of Business to Narrow it down</label>
+        <label for="business_type">Business Type:</label>
         <select
           name="business_type"
           onChange={(e) => {
             e.preventDefault();
+            this.setState({
+              allowLoadMore: true,
+            })
             if (e.target.value) {
               this._getBusinesses(
-                `business_type=${e.target.value}&lat=${this.state.latitude}
-                 &long=${this.state.longitude}&zoom=${this.state.zoom}`
+                `business_type=${e.target.value}`
                 )
             } else {
-              this._getBusinesses(`lat=${this.state.latitude}
-                 &long=${this.state.longitude}&zoom=${this.state.zoom}`)
-            }}}
+              this._getBusinesses(null)
+            }
+          }}
           >
           <option value="">Any</option>
           {BUSINESS_TYPES.map(type => {
