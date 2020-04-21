@@ -3,6 +3,8 @@ import {BASE_URL} from './constants.js';
 import axios from 'axios';
 import ConfirmModal from './confirmModal.js';
 import _ from 'lodash';
+import downcarrot from './downcarrot.svg'
+import upcarrot from './upcarrot.svg'
 
 
 class OpenForBusinessList extends React.Component {
@@ -10,7 +12,6 @@ class OpenForBusinessList extends React.Component {
     super(props)
     this.state = {
       error: null,
-      // businesses: this.props.businesses,
       deleteModalId: null,
       deleteModalName: null,
       isLoaded: true,
@@ -63,15 +64,15 @@ class OpenForBusinessList extends React.Component {
           online={business.online}
           takeout={business.take_out}
           delivery={business.delivery}
-          by_appointment={business.by_appointment}
-          business_id={business.business_id}
+          byAppointment={business.by_appointment}
+          businessId={business.business_id}
           details={business.details}
           onDelete={this.confirmDelete}
           key={businesses.business_id}
+          businessType={business.business_type}
           location={business.location}
         /> : null}</td>)}</tr>)
     }</table>
-
   }
 
   render() {
@@ -114,7 +115,13 @@ function Business(props) {
     <p>
       {location.street_address}<br/>{location.city}, {location.state}
     </p>
-    <button onClick={() => setShowDetails(!showDetails)}>{showDetails ? "Hide Details" : "Show Details"}</button>
+    <button class="dark" onClick={() => setShowDetails(!showDetails)}>
+      {showDetails ? (
+        <img className="20" src={upcarrot} alt="hide details"/>
+      ) : (
+        <img className="20" src={downcarrot} alt="show details"/>
+      )}
+    </button>
     {showDetails ? <div>
       {businessType ? <p>[{businessType}]</p> : null }
       <p>Details: {details}</p>

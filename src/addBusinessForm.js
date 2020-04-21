@@ -7,9 +7,6 @@ class AddBusinessForm extends React.Component {
 
   constructor(props) {
     super(props)
-    this.handleChange = this.handleChange.bind(this)
-    this.handleMultiselect = this.handleMultiselect.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this)
 
     this.state = {
       name: null,
@@ -28,16 +25,16 @@ class AddBusinessForm extends React.Component {
     }
   }
 
-  handleSubmit(event) {
+  handleSubmit = (event) => {
     const afterSave = this.props.afterSave
     event.preventDefault()
-    axios.post(BASE_URL + '/businesses', {
+    const data = {
       name: this.state.name,
-      is_open: this.state.normal == 'true',
-      take_out: this.state.take_out == 'true',
-      online: this.state.online == 'true',
-      delivery: this.state.delivery == 'true',
-      by_appointment: this.state.appointments == 'true',
+      is_open: this.state.normal === 'true',
+      take_out: this.state.take_out === 'true',
+      online: this.state.online === 'true',
+      delivery: this.state.delivery === 'true',
+      by_appointment: this.state.appointments === 'true',
       details: this.state.details,
       website: this.state.website,
       phone_number: this.state.phone,
@@ -49,37 +46,30 @@ class AddBusinessForm extends React.Component {
       street_address: this.state.address,
       mapbox_id: this.state.mapboxId,
       business_type: this.state.businessType,
-    }).then(function(response) {
-      afterSave(response.data.business)
-    })
-    .catch(function (error) { console.log(error)})
+    }
+    if (this.props.data.business_id) {
+      axios.put(BASE_URL + '/businesses/' + this.props.data.business_id, data)
+      .then(function(response) {
+        afterSave(response.data.business)
+      })
+      .catch(function (error) { console.log(error)})
+    } else {
+      axios.post(BASE_URL + '/businesses', data)
+      .then(function(response) {
+        afterSave(response.data.business)
+      })
+      .catch(function (error) { console.log(error)})
+    }
   }
 
-  handleChange(event) {
+  handleChange = (event) => {
     const target = event.target;
     this.setState({
       [target.name]: target.value
     })
   }
 
-  handleMultiselect(event) {
-    const target = event.target;
-    const targetValue = target.value;
-    const name = target.name;
-    let value;
-    if (this.state[name].includes(targetValue)) {
-      value = _.remove(this.state[name], x => x !== targetValue)
-    } else {
-      value = this.state[name].concat([targetValue])
-    }
-
-    this.setState({
-      [target.name]: value
-    })
-  }
-
   render() {
-
     return <div>
       <form onSubmit={this.handleSubmit}>
       <div className="details">
@@ -135,16 +125,33 @@ class AddBusinessForm extends React.Component {
       </div>
       {this.state.is_open === "true" && <div className="container">
         <div>
-          <input type="checkbox" checked={this.state.take_out === "true"} value={true} name="take_out" onChange={this.handleChange}/>
+          <input
+            name="take_out"
+            type="checkbox"
+            checked={this.state.take_out === "true"}
+            value={true}
+            onChange={this.handleChange}
+          />
           <label for="take_out" >Take out?</label>
         </div>
         <div>
-          <input type="checkbox"
-          checked={this.state.delivery === "true"} value={true} name="delivery" onChange={this.handleChange}/>
+          <input
+            type="checkbox"
+            checked={this.state.delivery === "true"}
+            value={true}
+            name="delivery"
+            onChange={this.handleChange}
+          />
           <label for="delivery" >Delivery?</label>
         </div>
         <div>
-          <input type="checkbox" checked={this.state.appointments === "true"} value={true} name="appointments" onChange={this.handleChange}/>
+          <input
+            type="checkbox"
+            checked={this.state.appointments === "true"}
+            value={true}
+            name="appointments"
+            onChange={this.handleChange}
+          />
           <label for="appointments" >By Appointment?</label>
         </div>
         <div>

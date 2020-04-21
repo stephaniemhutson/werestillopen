@@ -129,7 +129,8 @@ class Map extends React.Component {
           onClick={e => {
             e.preventDefault()
           }}
-          scrollZoom={false}
+          maxZoom={17}
+          minZoom={8}
           mapStyle='mapbox://styles/mapbox/streets-v11'
         >
           <Geocoder

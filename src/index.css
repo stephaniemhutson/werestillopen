@@ -21,12 +21,26 @@ code {
   top: 0;
   right: 0;
   left: 0;
-  height: 25em;
+  height: 35em;
 }
 
 .business-popup {
   min-width: 250px;
   max-width: 350px;
+}
+
+.header {
+  padding-bottom: .5em;
+}
+
+.header .name {
+  font-weight: bold;
+  font-size: 3em;
+}
+
+.header {
+  background-color: #333333;
+  color: #f1f1f1;
 }
 
 .container, .details {
@@ -40,6 +54,39 @@ code {
 
 .container div {
   padding: .1em;
+}
+
+nav {
+  text-align: left;
+  padding-left: 10em;
+  background-color: #30475e;
+  padding-bottom: 1em;
+  padding-top: 1em;
+/*}
+
+nav {*/
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  text-align: left;
+  padding-left: 10em;
+}
+
+
+
+nav a.home {
+  order: 1;
+  padding-right: 2em;
+}
+
+nav a.about {
+  order: 2;
+  padding-left: 2em;
+}
+
+nav a {
+  text-decoration: none;
+  color: #ececec;
 }
 
 .details div {
@@ -185,7 +232,7 @@ button.dark {
   width: 40px;
 }
 
-img.pin {
+img.pin img.20 {
   width: 20px;
 }
 
