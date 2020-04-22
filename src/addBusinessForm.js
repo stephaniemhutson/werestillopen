@@ -136,7 +136,6 @@ class AddBusinessForm extends React.Component {
             name="take_out"
             type="checkbox"
             checked={this.state.take_out}
-            value={true}
             onChange={this.handleChecked}
           />
           <label for="take_out" >Take out?</label>
@@ -145,7 +144,6 @@ class AddBusinessForm extends React.Component {
           <input
             type="checkbox"
             checked={this.state.delivery}
-            value={true}
             name="delivery"
             onChange={this.handleChecked}
           />
@@ -155,7 +153,6 @@ class AddBusinessForm extends React.Component {
           <input
             type="checkbox"
             checked={this.state.appointments}
-            value={true}
             name="appointments"
             onChange={this.handleChecked}
           />
@@ -165,7 +162,6 @@ class AddBusinessForm extends React.Component {
           <input
             type="checkbox"
             checked={this.state.online}
-            value={true}
             name="online"
             onChange={this.handleChecked}
             />
@@ -175,7 +171,6 @@ class AddBusinessForm extends React.Component {
           <input
             type="checkbox"
             checked={this.state.normal}
-            value={true}
             name="normal"
             onChange={this.handleChecked}
           />
