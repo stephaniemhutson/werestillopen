@@ -4,12 +4,12 @@ import Geocoder from "react-map-gl-geocoder";
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import {MAPBOX_TOKEN} from './config.js';
-import AddBusinessForm from './addBusinessForm.js';
+import {MAPBOX_TOKEN} from '../config.js';
+import AddBusinessForm from './AddBusinessForm.js';
 import BusinessPopup from './BusinessPopup.js'
-import closedpin from './closedpin.svg'
-import pin from './pin.svg'
-import {businessIsOpenAtAll} from './helper.js'
+import closedpin from '../closedpin.svg'
+import pin from '../pin.svg'
+import {businessIsOpenAtAll} from '../helper.js'
 
 class Map extends React.Component {
 

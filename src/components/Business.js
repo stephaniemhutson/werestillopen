@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
 import React, {useState} from 'react';
 
-import {businessIsOpenAtAll} from './helper.js'
-import downcarrot from './downcarrot.svg'
-import upcarrot from './upcarrot.svg'
+import {businessIsOpenAtAll} from '../helper.js'
+import downcarrot from '../downcarrot.svg'
+import upcarrot from '../upcarrot.svg'
 
 function Business(props) {
   const [showDetails, setShowDetails] = useState(false)

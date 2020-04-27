@@ -2,7 +2,7 @@ import axios from 'axios';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import {BASE_URL, BUSINESS_TYPES} from './constants.js'
+import {BASE_URL, BUSINESS_TYPES} from '../constants.js'
 
 class AddBusinessForm extends React.Component {
 

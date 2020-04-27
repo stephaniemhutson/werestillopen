@@ -2,10 +2,10 @@ import _ from 'lodash';
 import mapboxgl from 'mapbox-gl';
 import React from 'react';
 
-import {BASE_URL, BUSINESS_TYPES} from './constants.js';
-import {MAPBOX_TOKEN} from './config.js';
-import Map from './map.js';
-import OpenForBusinessList from './openForBusinessList.js';
+import {BASE_URL, BUSINESS_TYPES} from '../constants.js';
+import {MAPBOX_TOKEN} from '../config.js';
+import Map from './Map.js';
+import OpenForBusinessList from './OpenForBusinessList.js';
 
 class Home extends React.Component  {
   constructor(props) {

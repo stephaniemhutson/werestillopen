@@ -1,10 +1,10 @@
 import React from 'react';
 import {Link, Route, BrowserRouter as Router, Switch} from 'react-router-dom';
 
-import About from './about.js';
+import About from './components/About.js';
 import './App.css';
-import Header from './header.js';
-import Home from './Home.js';
+import Header from './components/Header.js';
+import Home from './components/Home.js';
 
 export default function App() {
   return (

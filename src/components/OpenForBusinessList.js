@@ -2,9 +2,9 @@ import axios from 'axios';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import {BASE_URL} from './constants.js';
+import {BASE_URL} from '../constants.js';
 import Business from './Business.js';
-import ConfirmModal from './confirmModal.js';
+import ConfirmModal from './ConfirmModal.js';
 
 class OpenForBusinessList extends React.Component {
   constructor(props) {
