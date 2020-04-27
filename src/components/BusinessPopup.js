@@ -1,7 +1,10 @@
 import React from 'react';
 import {Popup} from 'react-map-gl';
 
+import {businessIsOpenAtAll} from '../helper.js'
+
 function BusinessPopup({business, onClose, onEdit}) {
+  const openAtAll = businessIsOpenAtAll(business);
 
   return <Popup
             latitude={business.location.latitude}
@@ -15,17 +18,39 @@ function BusinessPopup({business, onClose, onEdit}) {
           <p>{business.location.street_address}</p>
           <p>{business.business_type ? `[${business.business_type}]` : null}</p>
           <p>{business.details}</p>
-          {business.is_open ? <p>We're open!</p> : null}
-          {business.take_out ? <p>We offer take out</p> : null}
-          {business.delivery ? <p>We deliver</p> : null}
-          {business.online ? <p>We're online!</p> : null}
-          <p><a href="{business.website}">{business.website}</a></p>
-          {business.by_appointment ? <p>Offering service by appointment</p> : null}
-          <p>{business.phone}</p>
-          {business.closed ? <p>Closed until further notice</p> : null}
+          {openAtAll ? (
+            <table className="businessInfo">
+              <tr>
+                <td>Open for in person business?</td>
+                <td className={business.is_open ? "yes" : "no"}>{business.is_open ? "Yes" : "No"}</td>
+              </tr>
+              <tr>
+                <td>Open for takeout?</td>
+                <td className={business.take_out ? "yes" : "no"}>{business.take_out ? "Yes" : "No"}</td>
+              </tr>
+              <tr>
+                <td>Open online?</td>
+                <td className={business.online ? "yes" : "no"}>{business.online ? "Yes" : "No"}</td>
+              </tr>
+              <tr>
+                <td>Open for delivery?</td>
+                <td className={business.delivery ? "yes" : "no"}>{business.delivery ? "Yes" : "No"}</td>
+              </tr>
+              <tr>
+                <td>Open by appointment?</td>
+                <td className={business.by_appointment ? "yes" : "no"}>{business.by_appointment ? "Yes" : "No"}</td>
+              </tr>
+            </table>
+          ) : (
+            <table className="businessInfo">
+              <tr>
+                <td>Open in any capacity?</td>
+                <td className="no">No</td>
+              </tr>
+            </table>
+          )}
           <button
             onClick={(e) => {
-              console.log("hello?")
               e.preventDefault();
               onEdit();
             }}>
