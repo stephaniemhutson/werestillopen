@@ -9,6 +9,7 @@ import AddBusinessForm from './addBusinessForm.js';
 import BusinessPopup from './BusinessPopup.js'
 import closedpin from './closedpin.svg'
 import pin from './pin.svg'
+import {businessIsOpenAtAll} from './helper.js'
 
 class Map extends React.Component {
 
@@ -112,16 +113,6 @@ class Map extends React.Component {
   render() {
     const {viewport, searchResultLayer, selectedBusiness, newBusiness, editingBusiness} = this.state
     const businesses = this.props.businesses
-
-    function businessIsOpenAtAll(business) {
-      return (
-        business.is_open ||
-        business.online ||
-        business.delivery ||
-        business.take_out ||
-        business.by_appointment
-      )
-    }
 
     return <div className="mapContainer">
         <ReactMapGL

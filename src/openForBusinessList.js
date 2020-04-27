@@ -59,7 +59,7 @@ class OpenForBusinessList extends React.Component {
 
     return <table className='businessList'>{
       rows.map(row => <tr>{row.map(business => <td>{business ? <Business name={business.name}
-          is_open={business.is_open}
+          isOpen={business.is_open}
           online={business.online}
           takeout={business.take_out}
           delivery={business.delivery}

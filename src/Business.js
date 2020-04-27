@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React, {useState} from 'react';
 
+import {businessIsOpenAtAll} from './helper.js'
 import downcarrot from './downcarrot.svg'
 import upcarrot from './upcarrot.svg'
 
@@ -9,7 +10,7 @@ function Business(props) {
 
   const {
     name,
-    is_open,
+    isOpen,
     takeout,
     online,
     delivery,
@@ -18,6 +19,8 @@ function Business(props) {
     location,
     businessType,
   } = props
+
+  const openAtAll = businessIsOpenAtAll(props)
 
   return <div className="business">
     <h3>{name}</h3>
@@ -34,20 +37,44 @@ function Business(props) {
     {showDetails ? <div>
       {businessType ? <p>[{businessType}]</p> : null }
       <p>Details: {details}</p>
-      <ul>
-        <li>Is Open: {is_open ? "Yes!" : "No"}</li>
-        <li>Takeout: {takeout ? "Yes!" : "No"}</li>
-        <li>Online: {online ? "Yes!" : "No"}</li>
-        <li>Delivery: {delivery ? "Yes!" : "No"}</li>
-        <li>Appointments: {byAppointment ? "Yes!": "No"}</li>
-      </ul>
+      {openAtAll ? (
+        <table className="businessInfo">
+          <tr>
+            <td>Open for in person business?</td>
+            <td className={isOpen ? "yes" : "no"}>{isOpen ? "Yes" : "No"}</td>
+          </tr>
+          <tr>
+            <td>Open for takeout?</td>
+            <td className={takeout ? "yes" : "no"}>{takeout ? "Yes" : "No"}</td>
+          </tr>
+          <tr>
+            <td>Open online?</td>
+            <td className={online ? "yes" : "no"}>{online ? "Yes" : "No"}</td>
+          </tr>
+          <tr>
+            <td>Open for delivery?</td>
+            <td className={delivery ? "yes" : "no"}>{delivery ? "Yes" : "No"}</td>
+          </tr>
+          <tr>
+            <td>Open by appointment?</td>
+            <td className={byAppointment ? "yes" : "no"}>{byAppointment ? "Yes" : "No"}</td>
+          </tr>
+        </table>
+      ) : (
+        <table className="businessInfo">
+          <tr>
+            <td>Open in any capacity?</td>
+            <td className="no">No</td>
+          </tr>
+        </table>
+      )}
     </div> : null}
   </div>;
 }
 
 Business.propTypes = {
   name: PropTypes.string.isRequired,
-  is_open: PropTypes.bool,
+  isOpen: PropTypes.bool,
   takeout: PropTypes.bool,
   online: PropTypes.bool,
   delivery: PropTypes.bool,

@@ -17,13 +17,18 @@ code {
     monospace;
 }
 
+table.businessInfo td.yes {
+  background-color: green;
+}
 
-/*.mapContainer {
-  top: 0;
-  margin-right: 4em;
-  margin-left: 4em;
-  height: 30em;
-}*/
+table.businessInfo td.no {
+  background-color: red;
+}
+
+table.businessInfo td.no, table.businessInfo td.yes {
+  color: white;
+  padding: .2em;
+}
 
 .business-popup {
   min-width: 250px;
