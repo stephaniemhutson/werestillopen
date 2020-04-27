@@ -17,6 +17,13 @@ code {
     monospace;
 }
 
+table.businessInfo {
+  margin: 0px auto;
+  border-radius: 12px;
+  border: 1px solid #888888;
+  padding: .2em;
+}
+
 table.businessInfo td.yes {
   background-color: green;
 }
@@ -25,9 +32,23 @@ table.businessInfo td.no {
   background-color: red;
 }
 
+h3.open {
+  background-color: green;
+  color: white;
+}
+h3.closed {
+  background-color: red;
+  color: white;
+}
+
+/*.business-popup table {
+  margin: 0px auto;
+}*/
+
 table.businessInfo td.no, table.businessInfo td.yes {
   color: white;
   padding: .2em;
+  border-radius: 10px;
 }
 
 .business-popup {
@@ -141,7 +162,7 @@ select.radio option {
     margin: 0px auto;
 
   }
-  table.businessList td {
+  table.businessList > tr > td {
     width: 100%;
   }
 
@@ -164,13 +185,13 @@ select.radio option {
     background-color: #cccccc;
   }
 
-  table.businessList td {
+  table.businessList > tr > td {
     width: 30%;
   }
 
 }
 
-table.businessList td {
+table.businessList > tr > td {
   text-align: center;
   vertical-align: text-top;
 }

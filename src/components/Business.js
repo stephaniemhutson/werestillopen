@@ -23,7 +23,7 @@ function Business(props) {
   const openAtAll = businessIsOpenAtAll(props)
 
   return <div className="business">
-    <h3>{name}</h3>
+    <h3 className={ openAtAll ? "open" : "closed" }>{name}</h3>
     <p>
       {location.street_address}<br/>{location.city}, {location.state}
     </p>
