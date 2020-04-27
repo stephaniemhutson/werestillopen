@@ -31,11 +31,11 @@ class AddBusinessForm extends React.Component {
     event.preventDefault()
     const formData = {
       name: this.state.name,
-      is_open: this.state.normal,
-      take_out: this.state.take_out,
-      online: this.state.online,
-      delivery: this.state.delivery,
-      by_appointment: this.state.appointments,
+      is_open: Boolean(this.state.normal),
+      take_out: Boolean(this.state.take_out),
+      online: Boolean(this.state.online),
+      delivery: Boolean(this.state.delivery),
+      by_appointment: Boolean(this.state.appointments),
       details: this.state.details,
       website: this.state.website,
       phone_number: this.state.phone,
