@@ -1,10 +1,11 @@
-import React from 'react';
-import OpenForBusinessList from './openForBusinessList.js';
-import Map from './map.js';
-import {MAPBOX_TOKEN} from './config.js';
-import mapboxgl from 'mapbox-gl';
-import {BASE_URL, BUSINESS_TYPES} from './constants.js';
 import _ from 'lodash';
+import mapboxgl from 'mapbox-gl';
+import React from 'react';
+
+import {BASE_URL, BUSINESS_TYPES} from './constants.js';
+import {MAPBOX_TOKEN} from './config.js';
+import Map from './map.js';
+import OpenForBusinessList from './openForBusinessList.js';
 
 class Home extends React.Component  {
   constructor(props) {
@@ -19,9 +20,6 @@ class Home extends React.Component  {
       businessType: null,
       city: null,
     }
-    this.checkForBusiness = this.checkForBusiness.bind(this)
-    this.afterSave = this.afterSave.bind(this)
-    this.afterDelete = this.afterDelete.bind(this)
     mapboxgl.accessToken = MAPBOX_TOKEN;
   }
 
@@ -51,7 +49,7 @@ class Home extends React.Component  {
     )
   }
 
-  async checkForBusiness(result) {
+  checkForBusiness = async (result) => {
     if (result.place_type.includes("poi")) {
       await fetch(`${BASE_URL}/mapid/${result.id}`).then(res => res.json())
       .then((res) => {
@@ -80,7 +78,7 @@ class Home extends React.Component  {
     }
   }
 
-  afterSave(newBusiness) {
+  afterSave = (newBusiness) => {
     let businesses = [...this.state.businesses]
     businesses.push(newBusiness);
     this.setState({
@@ -106,7 +104,7 @@ class Home extends React.Component  {
     })
   }
 
-  afterDelete(removedId) {
+  afterDelete = (removedId) => {
     let businesses = [...this.state.businesses]
     businesses = _.remove(businesses, biz => biz.business_id !== removedId)
     this.setState({businesses})

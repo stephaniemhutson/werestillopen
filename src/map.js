@@ -1,12 +1,14 @@
-import React from 'react';
-import {MAPBOX_TOKEN} from './config.js';
-import Geocoder from "react-map-gl-geocoder";
 import ReactMapGL, {Marker, Popup} from 'react-map-gl';
 import DeckGL, { GeoJsonLayer } from "deck.gl";
-import pin from './pin.svg'
-import closedpin from './closedpin.svg'
+import Geocoder from "react-map-gl-geocoder";
+import PropTypes from 'prop-types';
+import React from 'react';
+
+import {MAPBOX_TOKEN} from './config.js';
 import AddBusinessForm from './addBusinessForm.js';
 import BusinessPopup from './BusinessPopup.js'
+import closedpin from './closedpin.svg'
+import pin from './pin.svg'
 
 class Map extends React.Component {
 
@@ -223,6 +225,16 @@ class Map extends React.Component {
         </ReactMapGL>
       </div>;
   }
+}
+
+Map.propTypes = {
+  newBusiness: PropTypes.object,
+  selectedBusiness: PropTypes.object,
+  onViewportChange: PropTypes.func.isRequired,
+  onResult: PropTypes.func.isRequired,
+  afterUpdate: PropTypes.func.isRequired,
+  afterSave: PropTypes.func.isRequired,
+  businesses: PropTypes.arrayOf(PropTypes.object),
 }
 
 export default Map

@@ -1,8 +1,9 @@
 import React from 'react';
-import './App.css';
 import {Link, Route, BrowserRouter as Router, Switch} from 'react-router-dom';
-import Header from './header.js';
+
 import About from './about.js';
+import './App.css';
+import Header from './header.js';
 import Home from './Home.js';
 
 export default function App() {

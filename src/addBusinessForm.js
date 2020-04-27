@@ -1,6 +1,8 @@
-import React from 'react';
-import {BASE_URL, BUSINESS_TYPES} from './constants.js'
 import axios from 'axios';
+import PropTypes from 'prop-types';
+import React from 'react';
+
+import {BASE_URL, BUSINESS_TYPES} from './constants.js'
 
 class AddBusinessForm extends React.Component {
 
@@ -25,9 +27,9 @@ class AddBusinessForm extends React.Component {
   }
 
   handleSubmit = (event) => {
-    const afterSave = this.props.afterSave
+    const {afterSave, data} = this.props
     event.preventDefault()
-    const data = {
+    const formData = {
       name: this.state.name,
       is_open: this.state.normal,
       take_out: this.state.take_out,
@@ -37,23 +39,23 @@ class AddBusinessForm extends React.Component {
       details: this.state.details,
       website: this.state.website,
       phone_number: this.state.phone,
-      longitude: this.props.data.longitude,
-      latitude: this.props.data.latitude,
-      postal_code: this.props.data.postalCode,
-      state: this.props.data.state,
-      city: this.props.data.city,
+      longitude: data.longitude,
+      latitude: data.latitude,
+      postal_code: data.postalCode,
+      state: data.state,
+      city: data.city,
       street_address: this.state.address,
       mapbox_id: this.state.mapboxId,
       business_type: this.state.businessType,
     }
-    if (this.props.data.business_id) {
-      axios.put(BASE_URL + '/businesses/' + this.props.data.business_id, data)
+    if (data.business_id) {
+      axios.put(BASE_URL + '/businesses/' + data.business_id, formData)
       .then(function(response) {
         afterSave(response.data.business)
       })
       .catch(function (error) { console.log(error)})
     } else {
-      axios.post(BASE_URL + '/businesses', data)
+      axios.post(BASE_URL + '/businesses', formData)
       .then(function(response) {
         afterSave(response.data.business)
       })
@@ -261,5 +263,11 @@ class AddBusinessForm extends React.Component {
     </div>
   }
 }
+
+AddBusinessForm.propTypes = {
+  onCancel: PropTypes.func.isRequired,
+  afterSave: PropTypes.func.isRequired,
+  data: PropTypes.object,
+};
 
 export default AddBusinessForm;
