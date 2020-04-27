@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {MAPBOX_TOKEN} from './config.js';
 import Geocoder from "react-map-gl-geocoder";
 import ReactMapGL, {Marker, Popup} from 'react-map-gl';
@@ -7,8 +7,6 @@ import pin from './pin.svg'
 import closedpin from './closedpin.svg'
 import AddBusinessForm from './addBusinessForm.js';
 import BusinessPopup from './BusinessPopup.js'
-
-const MAPBOX_BASE_URL = 'https://api.mapbox.com/geocoding/v5/mapbox.places/'
 
 class Map extends React.Component {
 

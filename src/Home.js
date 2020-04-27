@@ -1,10 +1,8 @@
 import React from 'react';
-import AddBusinessForm from './addBusinessForm.js';
 import OpenForBusinessList from './openForBusinessList.js';
 import Map from './map.js';
 import {MAPBOX_TOKEN} from './config.js';
 import mapboxgl from 'mapbox-gl';
-import axios from 'axios';
 import {BASE_URL, BUSINESS_TYPES} from './constants.js';
 import _ from 'lodash';
 
@@ -94,7 +92,7 @@ class Home extends React.Component  {
 
   afterUpdate = (updatedBusiness) => {
     const businesses = []
-    this.state.businesses.map(business => {
+    this.state.businesses.forEach(business => {
       if (business.business_id === updatedBusiness.business_id) {
         businesses.push(updatedBusiness)
       } else {
@@ -200,15 +198,6 @@ class Home extends React.Component  {
           allowLoadMore={this.state.allowLoadMore} />
         ) : (<div>Loading...</div>)}
     </div>;
-  }
-}
-
-class NewBusiness extends React.Component {
-  render() {
-    return <div>
-      <h2>Add your business and status</h2>
-      <AddBusinessForm data={this.props.data} afterSave={this.props.afterSave} />
-    </div>
   }
 }
 

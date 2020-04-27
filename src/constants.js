@@ -4,7 +4,7 @@ export const STATUSES = [
   ['TAKEOUT', 'Offering Takeout'],
   ['DELIVERY', 'Offering Delivery'],
   ['CLOSED', 'Closed until further notice'],
-  ['OTHER', 'We\'re open and offering services.']
+  ['OTHER', 'We\'re open and offering services.'],
   ['APPOINTMENT', 'You can book an appointment']
 ];
 

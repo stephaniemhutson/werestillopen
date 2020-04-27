@@ -2,7 +2,6 @@ import React, {useState} from 'react';
 import {BASE_URL} from './constants.js';
 import axios from 'axios';
 import ConfirmModal from './confirmModal.js';
-import _ from 'lodash';
 import downcarrot from './downcarrot.svg'
 import upcarrot from './upcarrot.svg'
 
@@ -47,7 +46,7 @@ class OpenForBusinessList extends React.Component {
     }
     const rows = []
     let row = []
-    businesses.map((business, i) =>{
+    businesses.forEach((business, i) => {
       if (i % 3 === 0) {
         if (row.length) {
           rows.push(row)
@@ -105,9 +104,7 @@ function Business(props) {
     delivery,
     details,
     byAppointment,
-    onDelete,
     location,
-    businessId,
     businessType,
   } = props
   return <div className="business">

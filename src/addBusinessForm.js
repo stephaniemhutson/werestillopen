@@ -1,6 +1,5 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {BASE_URL, BUSINESS_TYPES} from './constants.js'
-import _ from 'lodash';
 import axios from 'axios';
 
 class AddBusinessForm extends React.Component {
