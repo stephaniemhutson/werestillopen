@@ -102,6 +102,7 @@ class AddBusinessForm extends React.Component {
             value={this.state.businessType}
             onChange={this.handleChange}
           >
+            <option disabled selected value> -- select an option -- </option>
             {BUSINESS_TYPES.map(type => {
               return <option value={type}>{type}</option>
             })}
