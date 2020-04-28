@@ -1,7 +1,9 @@
+from datetime import datetime
 from flask import Flask
 import pymysql.cursors
 from flask import json, make_response, request
 from flask_cors import CORS
+
 from .store.sql import Storage
 from .store.businesses import Business
 from .store.locations import Location
@@ -126,9 +128,15 @@ def alter_business(business_id):
     elif request.method == 'PUT':
         connection, storage = connect()
         data = request.get_json()
+
         business_data = {row: column for row, column in data.items() if row in Business.ROWS}
         location_data = {row: column for row, column in data.items() if row in Location.ROWS}
 
+        update_last_ts = business_data or location_data or data.get('force_update')
+        if update_last_ts:
+            now = datetime.now()
+            formatted_date = now.strftime('%Y-%m-%d %H:%M:%S')
+            business_data['last_updated_ts'] = formatted_date
         try:
             if business_data:
                 business = storage.update(Business, business_id, business_data)
