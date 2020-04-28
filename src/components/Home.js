@@ -34,11 +34,18 @@ class Home extends React.Component  {
         `${searchQuery}&${this.state.latLongQuery}`
       ) : (`${this.state.latLongQuery}`);
     }
+    if (this.state.businessType) {
+      query = `${query}&business_type=${this.state.businessType}`
+    }
+    if (this.state.city) {
+      query = `${query}&city=${this.state.city}`
+    }
     fetch(`${BASE_URL}${query ? "?" + query : ""}`).then(res => res.json())
     .then(
       (result) => {
         this.setState({
           businesses: result.businesses,
+          page: 1,
         });
       },
       (error) => {
@@ -168,18 +175,21 @@ class Home extends React.Component  {
         <label for="business_type">Business Type:</label>
         <select
           name="business_type"
+          value={this.state.businessType}
           onChange={(e) => {
             e.preventDefault();
+            if (e.target.value) {
+              this.setState({
+              allowLoadMore: true,
+              businessType: e.target.value,
+              }, () => this._getBusinesses())
+            } else {
+              this.setState({businessType: null}, () => this._getBusinesses())
+            }
             this.setState({
               allowLoadMore: true,
+              businessType: e.target.value,
             })
-            if (e.target.value) {
-              this._getBusinesses(
-                `business_type=${e.target.value}`
-                )
-            } else {
-              this._getBusinesses(null)
-            }
           }}
           >
           <option value="">Any</option>
