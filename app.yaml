@@ -1,0 +1,22 @@
+runtime: python37
+
+entrypoint: gunicorn -b :$PORT main:app
+# [START handlers]
+handlers:
+  - url: /.*
+    script: auto
+
+
+env_variables:
+  PUBLIC_URL: https://were-still-open-co.wl.r.appspot.com/
+  REACT_APP_MAPBOX_TOKEN: pk.eyJ1IjoiYW11dHRpY2FuIiwiYSI6ImNrYTM2aG9taDA0NmszbG81NzVoZG5nbWoifQ.P_mcTRewv2sLU5VRncOhKQ
+
+  FLASK_APP: main.py
+  MYSQL_USER: root
+
+  MYSQL_PASSWORD: KpDBxOz3D1lOohjz
+  MYSQL_DB: stillopen
+  MYSQL_HOST: were-still-open-co:us-central1:were-still-open
+  CLOUD_SQL_CONNECTION_NAME: /cloudsql/were-still-open-co:us-central1:were-still-open
+  PAGE_LIMIT: 50
+  STATIC_PATH: build
